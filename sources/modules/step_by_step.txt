@@ -1,0 +1,7 @@
+1 - Execute:
+	python dirs.py <nome_banco>
+
+2 - Abra o vscode em: source > nome banco > codes >
+
+3 - Abra o main.py, e navegue até a classe main_download.main > download.tqdm_bar. Faça as alterações necessárias conforme comentários.
+4 - Faça o debug da na própria classe, conforme código ao final do arquivo.
