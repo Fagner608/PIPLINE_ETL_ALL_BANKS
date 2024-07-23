@@ -67,5 +67,5 @@ def statusManager(bank:str, date: datetime.date):
     con.close()
 
 #Debug
-# cleaningImportation('crefisa', date=datetime.date(2024, 6, 18))
+# cleaningImportation('crefisa', date=datetime.date(2024, 7, 23))
 # statusManager('crefisa', date=datetime.date(2024, 6, 16))
