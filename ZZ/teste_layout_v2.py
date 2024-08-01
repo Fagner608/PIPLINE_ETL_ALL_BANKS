@@ -54,12 +54,15 @@ def main():
         st.subheader('Resultado da Filtragem')
         contratos_filtrados = filtrar_contratos(numero_ade, nome_banco, status_importacao, tipo_operacao, data_inicial, data_final)
 
-        contratos_filtrados['numero_ade'] = contratos_filtrados['numero_ade'].map(lambda x: '{:,}'.format(x) if isinstance(x, int) else x)
+        import re
+        contratos_filtrados['numero_ade'] = contratos_filtrados['numero_ade'].map(lambda x: re.sub(",", "", str(x)))
+        contratos_filtrados['contrato_id'] = contratos_filtrados['contrato_id'].map(lambda x: re.sub(",", "", str(x)))
 
-        st.dataframe(contratos_filtrados, width=0)  # Definir width=0 para ocupar toda a largura disponível
+        st.dataframe(contratos_filtrados, width=0) 
 
         # Botão para baixar em Excel
         if not contratos_filtrados.empty:
+            
             csv = contratos_filtrados.to_csv(index=False)
             b64 = base64.b64encode(csv.encode()).decode()
             href = f'<a href="data:file/csv;base64,{b64}" download="contratos_filtrados.csv">Download CSV</a>'

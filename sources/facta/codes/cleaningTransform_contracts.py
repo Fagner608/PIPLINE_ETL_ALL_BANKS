@@ -6,7 +6,7 @@ from readDownload import read_downaload
 from cleaningTransformaData import cleaningData, transformationData, saveStageArea
 from inputDataTransformed import inputsDB
 import datetime
-from upDateStagingAreaContractsCrefisa import updateStaginAreaCrefisa
+from upDateStagingAreaContractsCrefisa import updateStaginAreaContracts
 
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningContracts(date: datetime.date):
@@ -19,54 +19,48 @@ def CleaningContracts(date: datetime.date):
 
     '''
     ## Carga da tabela desejada
-    production = read_downaload().read_data(
-                        bank='crefisa', # informe o nome do banco conforme esta no diretorio criado
+    contracts = read_downaload().read_data(
+                        bank='facta', # informe o nome do banco conforme esta no diretorio criado
                         date = date,
-                        type_transference = ['production'], # informe o relatorio em que estao as informacoes dos contratos
-                        engine = ['html'],# informe o engine para leitura
-                        decimal = ',',
-                        thousands = '.',
-                        parse_dates=['DATA_DIGIT_BANCO', 'DATA_PAGAMENTO_CLIENTE', 'DATA_PAGAMENTO_COMISSAO', 'DATA_FISICO_EMPRESA', 'DATA_SUB_STATUS'],
+                        type_transference = ['comission'],
+                        engine = ['excel'], # informe o engine para leitura
+                        decimal = '.',
+                        thousands = ',',
+                        sheet_name = 'data',
+                        parse_dates=['DATA_REGISTRO', 'DATA_PAGAMENTO_CLIENTE', 'DATAEFETIVACAO'],
                         format_parse_dates='%d/%m/%Y',
                         header = 0
                     )
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
-    if production is not None:
+    if contracts is not None:
 
         # metodo para limpeza de valores monetarios
-        result = cleaningData().cleaning(dataFrame = production,
-                                                typeData = ['monetary'],
-                                                columns_convert = ['vlr_parc', 'valor_bruto', 'valor_liquido', 'valor_base', 'vlr_comissao_repasse', 'vlr_bonus_repasse'] # informe variaveis com valores monetarios, conforme exemplo
-                                                )
+        result = cleaningData().cleaning(dataFrame = contracts,
+                                        typeData = ['monetary'],
+                                        columns_convert = ['vl_liquido', 'vl_bruto', 'saldo_devedor', 'vl_comiss'] # informe variaveis com valores monetarios, conforme exemplo
+                                        )
+
 
         # metodo para limpeza de strings
         result = cleaningData().cleaning(dataFrame = result,
                                             typeData = ['string'],
-                                            columns_convert =['filial', 'grupo_vendedor', 'cod_vendedor', 'vendedor', 
-                                                        'prazo',  'perc_comissao_repasse', 'cpf', 'sit_banco', 'sit_pagamento_cliente',
-                                                        'banco', 'convenio', 'tabela', 'usuario_digit_banco',
-                                                        'usuario_digit_banco_subestabelecido', 'sub_usuario',
-                                                        'login_sub_usuario', 'situacao_pendencia', 'tipo_contrato',
-                                                        'codigo_produto', 'codigo_convenio', 'fisico_empresa', 'usuário_fisico_empresa',
-                                                        'sit_pagamento_comissao', 'sub_status', 'perc_bonus_repasse', 'numero_ade'
-                                                        ] # informe variaveis que contenham as strings que deseja limpar (Não insira atributos que contenham: nome de cliente, Id de contrato ou proposta, número de contrato ou proposta, datas SE estes campos precisarem manter o valor original)
+                                        
+                                        columns_convert =['ds_tabcom', 'numero_contrato'] # informe variaveis que contenham as strings que deseja limpar (Não insira atributos que contenham: nome de cliente, Id de contrato ou proposta, número de contrato ou proposta, datas SE estes campos precisarem manter o valor original)
                                                 )
 
         # metodo para transforacao dos valores monetarios
-        final_production = transformationData().convert_monetary(dataFrame = result,
-                                        columns_convert = ['vlr_parc', 'valor_bruto', 'valor_liquido', 'valor_base', 'vlr_comissao_repasse', 'vlr_bonus_repasse'])
+        final_contracts = transformationData().convert_monetary(dataFrame = result,
+                                    columns_convert = ['vl_liquido', 'vl_bruto', 'saldo_devedor', 'vl_comiss'] # informe variaveis com valores monetarios, conforme exemplo
+                                    )
 
 
         # Se necessario faca as demais alteracoes aqui
             #exemplo:
-            ## Spiit no tipo_contrato (001 - Novo Contrato)
-        # final_production['tipo_contrato'] = final_production['tipo_contrato'].str.split("__", expand = True)[1]
-        # final_production['usuario_digit_banco'] = final_production['usuario_digit_banco'].str.split("__", expand = True)[1]
-        # final_production['cod_usuario_digit_banco'] = final_production['usuario_digit_banco'].str.split("__", expand = True)[0]
-        # final_production['sub_usuario'] = final_production['sub_usuario'].str.split("_\(", expand = True)[0]
-        
+        final_contracts['codigo_tabela'] = final_contracts['ds_tabcom'].str.split('__', expand = True)[0]
+        final_contracts['nome_tabela'] = final_contracts['ds_tabcom'].str.split('__', expand = True)[1]
+            
         # metodo par enviar os dados para staging_area no banco de dados
-        saveStageArea().inputTable(table = final_production)
+        saveStageArea().inputTable(table = final_contracts)
   
 
 def load_contracts(date: datetime.date):
@@ -82,7 +76,7 @@ def load_contracts(date: datetime.date):
     '''
 
     # Atualizando valores na tabela staging_area
-    updateStaginAreaCrefisa().upDatating(bank='BANCO CREFISA')
+    updateStaginAreaContracts().upDatating(bank = 'FACTA FINANCEIRA')
 
     #lista para consultar os atributos das tabelas
     list_tables = ['contrato']
@@ -92,74 +86,73 @@ def load_contracts(date: datetime.date):
     
     # preencher os atributos com o correspondente da tabela carregada no staging_area
     #Tabela tipo_contrato (ex: novo, margem_livre, etc - como vier na fonte)
-    total_dict[0]['tipo_contrato'] = 'tipo_contrato'
+    total_dict[0]['tipo_contrato'] = 'tipo_operacao'
     
     # status_importacao (sera enviado com default de nao_importado) - nao preencher
     # total_dict[0]['status_importacao'] = ''
 
     # tipo_operacao (a informacao depende do tipo de contrato)
-    total_dict[0]['tipo_operacao'] = ''
+    total_dict[0]['tipo_operacao'] = 'tipo_operacao'
     
     # numero
-    total_dict[0]['numero_ade'] = ''
+    total_dict[0]['numero_ade'] = 'numero_contrato'
     
     #
-    total_dict[0]['quantidade_parcela_prazo'] = ''
+    total_dict[0]['quantidade_parcela_prazo'] = 'numeroprestacao'
     
     #
     total_dict[0]['valor_parcela'] = ''
     
-    total_dict[0]['valor_bruto'] = ''
+    total_dict[0]['valor_bruto'] = 'vl_bruto'
     
-    total_dict[0]['valor_liquido'] = ''
+    total_dict[0]['valor_liquido'] = 'vl_liquido'
     
-    total_dict[0]['valor_base'] = ''
+    total_dict[0]['valor_base'] = 'vl_liquido'
     
     total_dict[0]['percentual_cms_repasse'] = ''
     
-    total_dict[0]['valor_cms_repasse'] = ''
+    total_dict[0]['valor_cms_repasse'] = 'vl_comiss'
     
     total_dict[0]['percentual_bonus_repasse'] = ''
     
     total_dict[0]['valor_bonus_repasse'] = ''
     
-    total_dict[0]['data_pagamento_cliente'] = ''
+    total_dict[0]['data_pagamento_cliente'] = 'data_pagamento_cliente'
     
     total_dict[0]['percentual_cms_a_vista'] = ''
     
-    total_dict[0]['valor_cms_a_vista'] = ''
+    total_dict[0]['valor_cms_a_vista'] = 'vl_comiss'
     
     # tabela
-    total_dict[0]['nome_tabela'] = ''
+    total_dict[0]['nome_tabela'] = 'nome_tabela'
 
     # banco
-    total_dict[0]['nome_banco'] = ''
+    total_dict[0]['nome_banco'] = 'banco'
     
     # usuario_digitador_banco
     total_dict[0]['codigo_usuario_digitador'] = ''
     
     # convenio
-    total_dict[0]['nome_convenio'] = ''
+    total_dict[0]['nome_convenio'] = 'averbador'
     
     # usuario_substabelecido
     total_dict[0]['nome_usuario_substabelecido'] = ''
     
     #
-    total_dict[0]['nome_vendedor'] = 'vendedor'
+    total_dict[0]['nome_vendedor'] = 'corretor'
 
     # situacao
-    total_dict[0]['situacao'] = 'sit_pagamento_cliente'
+    total_dict[0]['situacao'] = ''
     
     # situacao
     total_dict[0]['cliente_id'] = 'cliente_id'
     
 
-
     # metodo que fara o input dos dados
     inputsDB().loadInput(list_tables = list_tables,
-                         total_dict = total_dict, contractos = True)
+                         total_dict = total_dict, contracts = True, staging_area_contato = 'numero_contrato')
     
 
 #Debug
-# CleaningContracts(date=datetime.date(2024, 5, 24))
-# load_contracts(date=datetime.date(2024, 5, 24))
+CleaningContracts(date=datetime.date(2024, 7, 23))
+load_contracts(date=datetime.date(2024, 7, 23))

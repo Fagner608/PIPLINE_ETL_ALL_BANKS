@@ -28,8 +28,8 @@ def CleaningComission(date: datetime.date):
                         date = date,
                         type_transference = ['comission'],
                         engine = ['excel'], # informe o engine para leitura
-                        decimal = ',',
-                        thousands = '.',
+                        decimal = '.',
+                        thousands = ',',
                         sheet_name = 'data',
                         parse_dates=['DATA_REGISTRO', 'DATA_PAGAMENTO_CLIENTE', 'DATAEFETIVACAO'],
                         format_parse_dates='%d/%m/%Y',
@@ -62,8 +62,8 @@ def CleaningComission(date: datetime.date):
 
         # Se necessario faca as demais alteracoes aqui
             #exemplo:
-        final_comission['ds_tabcom'] = final_comission['ds_tabcom'].str.split('__', expand = True)[1]
-        print(final_comission.head())
+        final_comission['codigo_tabela'] = final_comission['ds_tabcom'].str.split('__', expand = True)[0]
+        final_comission['nome_tabela'] = final_comission['ds_tabcom'].str.split('__', expand = True)[1]
             
         # metodo par enviar os dados para staging_area no banco de dados
         saveStageArea().inputTable(table = final_comission)
@@ -139,5 +139,5 @@ def load_comission(date: datetime.date):
     
 
 # Debug
-CleaningComission(date=datetime.date(2024, 7, 5))
-load_comission(date=datetime.date(2024, 7, 5))
+# CleaningComission(date=datetime.date(2024, 7, 23))
+# load_comission(date=datetime.date(2024, 7, 23))

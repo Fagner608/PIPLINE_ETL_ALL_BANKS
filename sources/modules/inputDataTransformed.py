@@ -34,7 +34,7 @@ class inputsDB():
         return total_dict 
     
 
-    def _insertData(self, tabela_zz: str, atributos_zz: list, atributos_staging_area: list, contracts: bool):
+    def _insertData(self, tabela_zz: str, atributos_zz: list, atributos_staging_area: list, contracts: bool, staging_area_contato: str):
 
         '''
             Metodo para fazer input no DB dos valores novos.
@@ -61,11 +61,11 @@ class inputsDB():
                         INSERT INTO {tabela_zz} ({atributos_sql})
                         SELECT DISTINCT {atributos_staging_sql}
                         FROM staging_area
-                        WHERE staging_area.numero_ade IS NOT NULL  -- Filtra valores nulos
+                        WHERE staging_area.{staging_area_contato} IS NOT NULL  -- Filtra valores nulos
                             AND NOT EXISTS (
                                 SELECT 1
                                 FROM contrato
-                                WHERE contrato.numero_ade = staging_area.numero_ade
+                                WHERE contrato.numero_ade = staging_area.{staging_area_contato}
                             );
                     '''
     # fiz o join pra todos os atributos, e quando só tenho um campo dá erro, porque o outro não tem nada
@@ -79,10 +79,11 @@ class inputsDB():
             cur.close()
             con.close()
         except sqlite3.OperationalError:
+            # raise
             pass
 
 
-    def loadInput(self, list_tables: list, total_dict: dict, contracts = False):
+    def loadInput(self, list_tables: list, total_dict: dict, staging_area_contato = 'numero_ade', contracts = False):
         for i, tabela_zz in enumerate(list_tables):
             # Filtra apenas atributos da tabela ZZ que contem seu correspondente no staging_area 
             atributos_zz = [key for key, value in total_dict[i].items() if value != ""]
@@ -92,4 +93,5 @@ class inputsDB():
                 inputsDB()._insertData(tabela_zz=tabela_zz,
                                     atributos_zz=atributos_zz,
                                     atributos_staging_area=atributos_staging_area,
-                                    contracts=contracts)
+                                    contracts=contracts,
+                                    staging_area_contato = staging_area_contato)
