@@ -6,7 +6,7 @@ from readDownload import read_downaload
 from cleaningTransformaData import cleaningData, transformationData, saveStageArea
 from inputDataTransformed import inputsDB
 import datetime
-from upDateStagingAreaContractsCrefisa import updateStaginAreaCrefisa
+from upDateStagingAreaContractsCrefisa import updateStaginAreaContracts
 
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningContracts(date: datetime.date):
@@ -19,7 +19,7 @@ def CleaningContracts(date: datetime.date):
 
     '''
     ## Carga da tabela desejada
-    production = read_downaload().read_data(
+    contracts = read_downaload().read_data(
                         bank='crefisa', # informe o nome do banco conforme esta no diretorio criado
                         date = date,
                         type_transference = ['production'], # informe o relatorio em que estao as informacoes dos contratos
@@ -31,10 +31,10 @@ def CleaningContracts(date: datetime.date):
                         header = 0
                     )
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
-    if production is not None:
+    if contracts is not None:
 
         # metodo para limpeza de valores monetarios
-        result = cleaningData().cleaning(dataFrame = production,
+        result = cleaningData().cleaning(dataFrame = contracts,
                                                 typeData = ['monetary'],
                                                 columns_convert = ['vlr_parc', 'valor_bruto', 'valor_liquido', 'valor_base', 'vlr_comissao_repasse', 'vlr_bonus_repasse'] # informe variaveis com valores monetarios, conforme exemplo
                                                 )
@@ -53,20 +53,20 @@ def CleaningContracts(date: datetime.date):
                                                 )
 
         # metodo para transforacao dos valores monetarios
-        final_production = transformationData().convert_monetary(dataFrame = result,
+        final_contracts = transformationData().convert_monetary(dataFrame = result,
                                         columns_convert = ['vlr_parc', 'valor_bruto', 'valor_liquido', 'valor_base', 'vlr_comissao_repasse', 'vlr_bonus_repasse'])
 
 
         # Se necessario faca as demais alteracoes aqui
             #exemplo:
             ## Spiit no tipo_contrato (001 - Novo Contrato)
-        # final_production['tipo_contrato'] = final_production['tipo_contrato'].str.split("__", expand = True)[1]
-        # final_production['usuario_digit_banco'] = final_production['usuario_digit_banco'].str.split("__", expand = True)[1]
-        # final_production['cod_usuario_digit_banco'] = final_production['usuario_digit_banco'].str.split("__", expand = True)[0]
-        # final_production['sub_usuario'] = final_production['sub_usuario'].str.split("_\(", expand = True)[0]
+        # final_contracts['tipo_contrato'] = final_contracts['tipo_contrato'].str.split("__", expand = True)[1]
+        # final_contracts['usuario_digit_banco'] = final_contracts['usuario_digit_banco'].str.split("__", expand = True)[1]
+        # final_contracts['cod_usuario_digit_banco'] = final_contracts['usuario_digit_banco'].str.split("__", expand = True)[0]
+        # final_contracts['sub_usuario'] = final_contracts['sub_usuario'].str.split("_\(", expand = True)[0]
         
         # metodo par enviar os dados para staging_area no banco de dados
-        saveStageArea().inputTable(table = final_production)
+        saveStageArea().inputTable(table = final_contracts)
   
 
 def load_contracts(date: datetime.date):
@@ -82,7 +82,7 @@ def load_contracts(date: datetime.date):
     '''
 
     # Atualizando valores na tabela staging_area
-    updateStaginAreaCrefisa().upDatating(bank='BANCO CREFISA')
+    updateStaginAreaContracts().upDatating(bank='BANCO CREFISA')
 
     #lista para consultar os atributos das tabelas
     list_tables = ['contrato']

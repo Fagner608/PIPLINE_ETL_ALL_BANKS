@@ -49,6 +49,7 @@ def crefisaCleaningProduction(date: datetime.date):
 
         ## Spiit no tipo_contrato (001 - Novo Contrato)
         final_production['tipo_contrato'] = final_production['tipo_contrato'].str.split("__", expand = True)[1]
+        
         saveStageArea().inputTable(table = final_production)
 
 
@@ -116,5 +117,5 @@ def load_crefisa_production(date: datetime.date):
     
 
 # Debug
-# crefisaCleaningProduction(date = datetime.date(2024,6,18))
-# load_crefisa_production(date = datetime.date(2024,6,18))
+# crefisaCleaningProduction(date = datetime.date(2024,7,27))
+# load_crefisa_production(date = datetime.date(2024,7,27))

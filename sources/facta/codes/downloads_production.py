@@ -142,7 +142,7 @@ class download_production():
 
 
         processos = [
-                    ("Download do relatório de comissão FACTA", self.dowloadPrducion)
+                    ("Download do relatório de produção FACTA", self.dowloadPrducion)
                       ]
         
         with tqdm(total=len(processos), desc="Executando processos") as pbar_total:

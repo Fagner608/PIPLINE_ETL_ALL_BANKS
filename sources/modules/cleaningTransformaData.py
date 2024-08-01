@@ -38,11 +38,11 @@ class cleaningData():
                 
                 if typeData[0] == 'monetary':
                     for column in columns_convert:
-                        dataFrame[column] = dataFrame[column].apply(lambda x: sub(r"[$R$]", "", str(x)).strip())
+                        dataFrame[column] = dataFrame[column].apply(lambda x: sub(r"[$R$\-]", "", str(x)).strip())
 
                 elif typeData[0] == 'string':
                     for column in columns_convert:
-                        dataFrame[column] = dataFrame[column].apply(lambda x: sub(r"'|\*|`|'\?|\$|$|\.|R\$|\%|\-|\_", "", str(x)).strip().replace(" ", "_"))
+                        dataFrame[column] = dataFrame[column].apply(lambda x: sub(r"'|\*|`|'|'|\?|\$|$|\.|R\$|\%|\-|-|\_", "", str(x)).strip().replace(" ", "_"))
                         dataFrame[column] = dataFrame[column].apply(lambda x: str(x).lower())
                         dataFrame[column] = dataFrame[column].apply(lambda x: sub(r'[áàãâä]', 'a', x))
                         dataFrame[column] = dataFrame[column].apply(lambda x: sub(r'[éèêë]', 'e', x))
@@ -82,7 +82,7 @@ class transformationData():
                 except ValueError:
                     dataFrame[column] = dataFrame[column].str.replace(".", "")
                     dataFrame[column] = dataFrame[column].str.replace(",", ".")
-                    dataFrame[column] = dataFrame[column].map(lambda x: locale.currency(float(x), symbol=False, grouping=True))
+                    dataFrame[column] = dataFrame[column].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if len(x) > 0 else x)
                      
             return dataFrame
 

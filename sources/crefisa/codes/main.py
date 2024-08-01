@@ -2,6 +2,7 @@ import main_download
 import main_tranformLoad
 import datetime
 import mainStorm
+    
 
 
 if __name__ == "__main__":
@@ -18,4 +19,7 @@ if __name__ == "__main__":
     
     # Reports
     mainStorm.main(date=datetime.date.today(), bank='BANCO CREFISA')
-        
+
+    #Finalização
+    print("Processo finalizado.")
+    

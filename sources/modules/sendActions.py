@@ -50,5 +50,6 @@ def move_file(date: datetime.date, type_transference: list = ['comission', 'prod
                time.sleep(2)
                continue
         file = listdir(path_download_tmp)[0]
+        makedirs(path_to_move, exist_ok=True)
         move(path_download_tmp + file, path_to_move + f"{date}{Path(file).suffix}")
 

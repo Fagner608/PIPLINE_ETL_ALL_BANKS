@@ -23,6 +23,6 @@ def main(date: datetime.date):
 
 
 # Debug
-# main(date = datetime.date(2024,6,24))
+# main(date = datetime.date(2024,7,27))
 # print("Transformação e carga crefisa finalizados.")
 

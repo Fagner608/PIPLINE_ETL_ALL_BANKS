@@ -61,7 +61,8 @@ class updateStaginAreaModel():
         try:
             cur.executescript(query)
         except sqlite3.OperationalError:
-            pass
+            raise
+            # pass
         con.commit()
         cur.close()
         con.close()

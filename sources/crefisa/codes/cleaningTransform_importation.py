@@ -34,8 +34,9 @@ def cleaningImportation(bank: str, date = datetime.date):
 
         
         # Spiit no tipo_contrato (001 - Novo Contrato)
-        result['data_importacao'] = result['nome_arquivo'].map(lambda x: re.findall('\d{1,2}-\d{1,2}-\d{4}', x)[0])
+        result['data_importacao'] = result['nome_arquivo'].map(lambda x: (re.findall('\d{1,2}-\d{1,2}-\d{4}', x) or re.findall('\d{1,2}-\d{1,2}', x))[0])
         result.drop(['nome_arquivo'], axis = 1, inplace=True)
+        result['data_importacao'] = result['data_importacao'].apply(lambda x: x + f"-{date.year}" if len(x) < 8 else x)
         result['data_importacao'] = result['data_importacao'].apply(lambda x: datetime.datetime.strptime(x, '%d-%m-%Y'))
         saveStageArea().inputTable(table = result)
         
@@ -67,5 +68,5 @@ def statusManager(bank:str, date: datetime.date):
     con.close()
 
 #Debug
-# cleaningImportation('crefisa', date=datetime.date(2024, 6, 18))
+# cleaningImportation('crefisa', date=datetime.date(2024, 7, 23))
 # statusManager('crefisa', date=datetime.date(2024, 6, 16))
