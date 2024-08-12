@@ -28,6 +28,7 @@ class updateStaginAreaContracts():
 
         alter table staging_area add column banco text;
         alter table staging_area add column cliente_id text;
+        alter table staging_area add column bonus float;
 
         
         -- atualizando banco

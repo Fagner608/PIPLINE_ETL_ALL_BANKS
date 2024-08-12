@@ -20,7 +20,7 @@ class read_downaload():
                 header = None,
                 thousands = None,
                 sheet_name = None,
-                type_transference: list = ['comission', 'production', 'importation'],
+                type_transference: list = ['comission', 'production', 'importation', 'extra'],
                 engine: list = ['csv', 'excel', 'html'],
                 parse_dates = None,
                 format_parse_dates = None,
@@ -56,13 +56,13 @@ class read_downaload():
                 
             elif engine == 'excel':
                 dados = pd.read_excel(path_to_read + file,
-                                    decimal=decimal,
-                                    thousands=thousands,
-                                    header=header,
-                                    sheet_name=sheet_name,
-                                    parse_dates=parse_dates,
-                                    date_format=format_parse_dates,
-                                    converters=converters)
+                                      decimal=decimal,
+                                      thousands=thousands,
+                                      header=header,
+                                      sheet_name=sheet_name,
+                                      parse_dates=parse_dates,
+                                      date_format=format_parse_dates,
+                                      converters=converters) # type: ignore
                 
             elif engine == 'html':
                 dados = pd.read_html(path_to_read + file,

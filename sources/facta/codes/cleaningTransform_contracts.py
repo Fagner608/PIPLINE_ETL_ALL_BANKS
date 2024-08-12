@@ -6,7 +6,8 @@ from readDownload import read_downaload
 from cleaningTransformaData import cleaningData, transformationData, saveStageArea
 from inputDataTransformed import inputsDB
 import datetime
-from upDateStagingAreaContractsCrefisa import updateStaginAreaContracts
+from upDateStagingAreaContractsFacta import updateStaginAreaContracts
+# import cleaningTransform_extra
 
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningContracts(date: datetime.date):
@@ -77,7 +78,10 @@ def load_contracts(date: datetime.date):
 
     # Atualizando valores na tabela staging_area
     updateStaginAreaContracts().upDatating(bank = 'FACTA FINANCEIRA')
-
+    
+    # Fazendo conciliação com contaCorrente
+    # CleaningExtra(date=date)
+    
     #lista para consultar os atributos das tabelas
     list_tables = ['contrato']
 
@@ -115,7 +119,7 @@ def load_contracts(date: datetime.date):
     
     total_dict[0]['percentual_bonus_repasse'] = ''
     
-    total_dict[0]['valor_bonus_repasse'] = ''
+    total_dict[0]['valor_bonus_repasse'] = 'bonus'
     
     total_dict[0]['data_pagamento_cliente'] = 'data_pagamento_cliente'
     

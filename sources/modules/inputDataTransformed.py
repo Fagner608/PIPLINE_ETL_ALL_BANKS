@@ -79,8 +79,8 @@ class inputsDB():
             cur.close()
             con.close()
         except sqlite3.OperationalError:
-            # raise
-            pass
+            raise
+            # pass
 
 
     def loadInput(self, list_tables: list, total_dict: dict, staging_area_contato = 'numero_ade', contracts = False):

@@ -12,7 +12,6 @@ if __name__ == "__main__":
     
     # Transform and Load data
     date = datetime.date.today() - datetime.timedelta(days = 5)
-    # date = datetime.date.today()
     while date <= datetime.date.today():
         main_tranformLoad.main(date=date)
         date += datetime.timedelta(days = 1)
