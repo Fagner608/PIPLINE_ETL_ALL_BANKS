@@ -34,7 +34,7 @@ def cleaningImportation(bank: str, date = datetime.date):
 
         
         # Spiit no tipo_contrato (001 - Novo Contrato)
-        result['data_importacao'] = result['nome_arquivo'].map(lambda x: re.findall('\d{1,2}-\d{1,2}-\d{4}', x)[0])
+        result['data_importacao'] = result['nome_arquivo'].map(lambda x: (re.findall('\d{1,2}-\d{1,2}-\d{4}', x) or re.findall('\d{1,2}-\d{1,2}', x))[0])
         result.drop(['nome_arquivo'], axis = 1, inplace=True)
         result['data_importacao'] = result['data_importacao'].apply(lambda x: datetime.datetime.strptime(x, '%d-%m-%Y'))
         saveStageArea().inputTable(table = result)

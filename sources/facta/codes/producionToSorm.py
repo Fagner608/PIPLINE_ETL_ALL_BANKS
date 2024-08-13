@@ -1,6 +1,7 @@
 # obter propostas
 import pandas as pd
 import datetime
+import os
 
 # Classe para relatorio de producao - recebe contratos nao importados, e cria relatorio
  # basta ajustar os campos que o storm espera receber
@@ -67,7 +68,15 @@ class productionToStorm():
                 dados = dados[self.columns_select]
                 # dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
                 dados.columns = self.columns_to_rename
+                os.makedirs(path_to_save, exist_ok=True)
+                
                 dados.to_csv(path_to_save + f'{bank}.csv', index = False)
 
 # debug     
-# productionToStorm().makeReport(date = datetime.date(2024, 6, 20), bank = 'BANCO CREFISA')
+# productionToStorm().makeReport(date = datetime.date(2024, 8, 13), bank = 'FACTA FINANCEIRA')
+
+# DATA CADASTRO está datetime, deixar só date
+# TIPO DE OPERACAO incluir código 35
+# CODIGO TABELA está o nome, inserir o código feito
+# SITUACAO incluir pago
+# USUARIO BANCO inserir usuário banco

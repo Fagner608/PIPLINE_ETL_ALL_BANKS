@@ -128,7 +128,8 @@ def load_contracts(date: datetime.date):
     total_dict[0]['valor_cms_a_vista'] = 'vl_comiss'
     
     # tabela
-    total_dict[0]['nome_tabela'] = 'nome_tabela'
+    total_dict[0]['nome_tabela'] = 'codigo_tabela'
+
 
     # banco
     total_dict[0]['nome_banco'] = 'banco'
@@ -158,5 +159,5 @@ def load_contracts(date: datetime.date):
     
 
 #Debug
-CleaningContracts(date=datetime.date(2024, 7, 23))
-load_contracts(date=datetime.date(2024, 7, 23))
+# CleaningContracts(date=datetime.date(2024, 7, 23))
+# load_contracts(date=datetime.date(2024, 7, 23))
