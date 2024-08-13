@@ -29,11 +29,13 @@ class updateStaginAreaExtra():
                         teste = teste + item
                         retorno = '{0:.2f}'.format(teste)
                 else:
-                    retorno  = retorno[0]
-
-                retorno = retorno.replace(",", ".")
+                    try:
+                        retorno  = retorno[0]
+                        retorno = retorno.replace(".", "").replace(",", ".")
+                    except IndexError:
+                        retorno = 0.00
                 return retorno
-    
+            
     def propostasUnicas(self):
          
         '''
@@ -61,33 +63,34 @@ class updateStaginAreaExtra():
          Atualiza dados do staging_area
         '''
         propostas = self.propostasUnicas()
-        propostas = [int(proposta) if proposta is not None else proposta for proposta in propostas ]
-        for proposta in propostas:
-            print(proposta)
-            con, cur = inputsDB().conDatabase()
-            ############ Digite aqui suas querys ############
-            # exemlo
-            query = f'''
+        propostas = [int(proposta) if proposta is not None else proposta for proposta in propostas]
         
-            -- Atualizando flat
-            UPDATE staging_area
-            set vl_comiss = {self.conciliation_flat(proposta=proposta, contaCorrente=contaCorrente, flat=True)}
-            where proposta == {proposta};
+        # print(propostas != None)
+        for proposta in propostas:
+            if proposta is not None:
+                con, cur = inputsDB().conDatabase()
+                ############ Digite aqui suas querys ############
+                # exemlo
+                query = f'''
             
-            -- Atualizando bonus
-            UPDATE staging_area
-            set bonus = {self.conciliation_flat(proposta=proposta, contaCorrente=contaCorrente)}
-            where proposta == {proposta};
-            
-            '''
-            print(query)
-            
-            try:
-                cur.executescript(query)
-            except sqlite3.OperationalError:
-                raise
-            con.commit()
-            cur.close()
-            con.close()
+                -- Atualizando flat
+                UPDATE staging_area
+                set vl_comiss = {self.conciliation_flat(proposta=proposta, contaCorrente=contaCorrente, flat=True)}
+                where proposta == {proposta};
+                
+                -- Atualizando bonus
+                UPDATE staging_area
+                set bonus = {self.conciliation_flat(proposta=proposta, contaCorrente=contaCorrente)}
+                where proposta == {proposta};
+                
+                '''
+                
+                try:
+                    cur.executescript(query)
+                except sqlite3.OperationalError:
+                    raise
+                con.commit()
+                cur.close()
+                con.close()
         
    

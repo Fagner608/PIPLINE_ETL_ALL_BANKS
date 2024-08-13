@@ -59,4 +59,4 @@ def CleaningExtra(date: datetime.date):
 
 
 # Debug
-CleaningExtra(date = datetime.date(2024, 7, 23))
+# CleaningExtra(date = datetime.date(2024, 7, 23))

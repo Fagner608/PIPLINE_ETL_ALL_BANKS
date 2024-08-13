@@ -7,7 +7,7 @@ from cleaningTransformaData import cleaningData, transformationData, saveStageAr
 from inputDataTransformed import inputsDB
 import datetime
 from upDateStagingAreaContractsFacta import updateStaginAreaContracts
-# import cleaningTransform_extra
+import cleaningTransform_extra
 
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningContracts(date: datetime.date):
@@ -59,7 +59,6 @@ def CleaningContracts(date: datetime.date):
             #exemplo:
         final_contracts['codigo_tabela'] = final_contracts['ds_tabcom'].str.split('__', expand = True)[0]
         final_contracts['nome_tabela'] = final_contracts['ds_tabcom'].str.split('__', expand = True)[1]
-            
         # metodo par enviar os dados para staging_area no banco de dados
         saveStageArea().inputTable(table = final_contracts)
   
@@ -78,6 +77,7 @@ def load_contracts(date: datetime.date):
 
     # Atualizando valores na tabela staging_area
     updateStaginAreaContracts().upDatating(bank = 'FACTA FINANCEIRA')
+    cleaningTransform_extra.CleaningExtra(date=date)
     
     # Fazendo conciliação com contaCorrente
     # CleaningExtra(date=date)
@@ -99,7 +99,7 @@ def load_contracts(date: datetime.date):
     total_dict[0]['tipo_operacao'] = 'tipo_operacao'
     
     # numero
-    total_dict[0]['numero_ade'] = 'numero_contrato'
+    total_dict[0]['numero_ade'] = 'codigo'
     
     #
     total_dict[0]['quantidade_parcela_prazo'] = 'numeroprestacao'
@@ -154,7 +154,7 @@ def load_contracts(date: datetime.date):
 
     # metodo que fara o input dos dados
     inputsDB().loadInput(list_tables = list_tables,
-                         total_dict = total_dict, contracts = True, staging_area_contato = 'numero_contrato')
+                         total_dict = total_dict, contracts = True, staging_area_contato = 'codigo')
     
 
 #Debug
