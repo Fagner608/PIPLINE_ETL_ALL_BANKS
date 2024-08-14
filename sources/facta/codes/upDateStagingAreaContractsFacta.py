@@ -18,7 +18,7 @@ class updateStaginAreaContracts():
     def upDatating(self, bank = str):
         
         '''
-         Retorna propostas com status de importacao 'nao_importadas'
+         Atualiza dados do staging_area
         '''
         con, cur = inputsDB().conDatabase()
         
@@ -29,8 +29,14 @@ class updateStaginAreaContracts():
         alter table staging_area add column banco text;
         alter table staging_area add column cliente_id text;
         alter table staging_area add column bonus float;
+        alter table staging_area add column codigo_usuario_digitador text;
+        alter table staging_area add column sit_pagamento_cliente text;
 
         
+        update staging_area
+        set sit_pagamento_cliente = 'PAGO';
+
+
         -- atualizando banco
         UPDATE staging_area 
         set banco = '{bank}';
@@ -58,7 +64,7 @@ class updateStaginAreaContracts():
 
         -- Atualizando tipo de contrato/operacao
         UPDATE staging_area SET tipo_operacao = CASE 
-            WHEN tipo_operacao IN ('13', 'novo_digital', 'novo_digital_(repr_legal)', 'novo_digital_consignado', '37') THEN 'MARGEM LIVRE (NOVO)'
+            WHEN tipo_operacao IN ('13', 'novo_digital', 'novo_digital_(repr_legal)', 'novo_digital_consignado', '37', '35') THEN 'MARGEM LIVRE (NOVO)'
             WHEN tipo_operacao IN ('14', '32', 'refin_digital', 'refin_da_portabilidade', 'refin_da_portabilidade_(repr_legal)', 'refin_digital_+_margem_livre') THEN 'REFINANCIAMENTO'
             WHEN tipo_operacao IN ('17', 'portabilidade_digital', '43') THEN 'PORTABILIDADE'
             WHEN tipo_operacao IN ('18', 'refin_da_portabilidade', '44') THEN 'REFINANCIAMENTO DA PORTABILIDADE'

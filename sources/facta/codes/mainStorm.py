@@ -9,9 +9,9 @@ def main(date: datetime.date, bank: str):
         
         
         processos = [
-                    # (f"Download dos dados de importacao {date} - crefisa",  download_importados_storm().tqdm_bar),
-                    # (f"Limpando e trnsformando dados de importacao {date} - crefisa", cleaningTransform_importation.cleaningImportation),
-                    #  (f"Gerenciando status de importação - crefisa", cleaningTransform_importation.statusManager),
+                    (f"Download dos dados de importacao {date} - facta",  download_importados_storm().tqdm_bar),
+                    (f"Limpando e trnsformando dados de importacao {date} - facta", cleaningTransform_importation.cleaningImportation),
+                     (f"Gerenciando status de importação - facta", cleaningTransform_importation.statusManager),
                      (f"Limpando e trnsformando dados de comissão {date} - {bank}", comissionToSorm.comissionToStorm().makeReport),
                     (f"Limpando e trnsformando dados de comissão {date} - {bank}", producionToSorm.productionToStorm().makeReport)
                     ]

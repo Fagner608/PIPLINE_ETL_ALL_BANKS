@@ -7,7 +7,7 @@ import mainStorm
 if __name__ == "__main__":
 
     # Extract
-    # main_download.main(date = datetime.date.today())
+    main_download.main(date = datetime.date.today())
     
     # Transform and Load
     date = datetime.date.today() - datetime.timedelta(days = 5)
@@ -16,5 +16,5 @@ if __name__ == "__main__":
         date += datetime.timedelta(days = 1)
     
     # Gerando relatórios Storm
-    mainStorm.main(date=datetime.date.today(), bank='BANCO CREFISA')
+    mainStorm.main(date=datetime.date.today(), bank='FACTA FINANCEIRA')
         

@@ -7,7 +7,7 @@ from cleaningTransformaData import cleaningData, transformationData, saveStageAr
 from inputDataTransformed import inputsDB
 import datetime
 from upDateStagingAreaContractsFacta import updateStaginAreaContracts
-import cleaningTransform_extra
+import cleaningTransform_extra, cleaningTransform_usuario
 
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningContracts(date: datetime.date):
@@ -77,7 +77,10 @@ def load_contracts(date: datetime.date):
 
     # Atualizando valores na tabela staging_area
     updateStaginAreaContracts().upDatating(bank = 'FACTA FINANCEIRA')
+
     cleaningTransform_extra.CleaningExtra(date=date)
+
+    cleaningTransform_usuario.CleaningUser(date=date)
     
     # Fazendo conciliação com contaCorrente
     # CleaningExtra(date=date)
@@ -135,7 +138,7 @@ def load_contracts(date: datetime.date):
     total_dict[0]['nome_banco'] = 'banco'
     
     # usuario_digitador_banco
-    total_dict[0]['codigo_usuario_digitador'] = ''
+    total_dict[0]['codigo_usuario_digitador'] = 'codigo_usuario_digitador'
     
     # convenio
     total_dict[0]['nome_convenio'] = 'averbador'
@@ -147,7 +150,7 @@ def load_contracts(date: datetime.date):
     total_dict[0]['nome_vendedor'] = 'corretor'
 
     # situacao
-    total_dict[0]['situacao'] = ''
+    total_dict[0]['situacao'] = 'sit_pagamento_cliente'
     
     # situacao
     total_dict[0]['cliente_id'] = 'cliente_id'

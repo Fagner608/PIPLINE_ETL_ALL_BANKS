@@ -42,7 +42,7 @@ class productionToStorm():
                                    "valor_liquido",
                                    "codigo_usuario_digitador",
                                    "situacao",
-                                   "data_pagamento_cliente",
+                                #    "data_pagamento_cliente",
                                    'cpf_cliente',
                                    'nome_cliente',
                                    'formalizacao_digial'
@@ -64,9 +64,9 @@ class productionToStorm():
             dados = self.productionReport(date=date, bank=bank)
 
             if dados is not None:
-    
                 dados = dados[self.columns_select]
-                # dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
+                dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
+                dados.insert(11, 'DATA DE PAGAMENTO', dados['data_pagamento_cliente'])
                 dados.columns = self.columns_to_rename
                 os.makedirs(path_to_save, exist_ok=True)
                 
@@ -75,8 +75,5 @@ class productionToStorm():
 # debug     
 # productionToStorm().makeReport(date = datetime.date(2024, 8, 13), bank = 'FACTA FINANCEIRA')
 
-# DATA CADASTRO está datetime, deixar só date
-# TIPO DE OPERACAO incluir código 35
-# CODIGO TABELA está o nome, inserir o código feito
-# SITUACAO incluir pago
+
 # USUARIO BANCO inserir usuário banco

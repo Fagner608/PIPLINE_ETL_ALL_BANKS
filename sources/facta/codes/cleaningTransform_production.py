@@ -142,5 +142,5 @@ def load_production(date: datetime.date):
     
 
 # Debug
-# CleaningProduction(date = datetime.date(2024, 7, 23))
+CleaningProduction(date = datetime.date(2024, 7, 23))
 # load_production(date = datetime.date(2024, 7, 23))
