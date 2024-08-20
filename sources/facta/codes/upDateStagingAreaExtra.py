@@ -46,7 +46,7 @@ class updateStaginAreaExtra():
 
         query = '''
             select distinct 
-                proposta
+                codigo
             from 
                 staging_area
            '''
@@ -76,14 +76,15 @@ class updateStaginAreaExtra():
                 -- Atualizando flat
                 UPDATE staging_area
                 set vl_comiss = {self.conciliation_flat(proposta=proposta, contaCorrente=contaCorrente, flat=True)}
-                where proposta == {proposta};
+                where codigo == {proposta};
                 
                 -- Atualizando bonus
                 UPDATE staging_area
                 set bonus = {self.conciliation_flat(proposta=proposta, contaCorrente=contaCorrente)}
-                where proposta == {proposta};
+                where codigo == {proposta};
                 
                 '''
+                
                 
                 try:
                     cur.executescript(query)

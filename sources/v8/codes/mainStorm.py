@@ -8,13 +8,11 @@ from tqdm import tqdm
 def main(date: datetime.date, bank: str):
         
         
-        processos = [
-                    (f"Download dos dados de importacao {date} - {bank}",  download_importados_storm().tqdm_bar),
-                    (f"Limpando e trnsformando dados de importacao {date} - {bank}", cleaningTransform_importation.cleaningImportation),
-                     (f"Gerenciando status de importação - {bank}", cleaningTransform_importation.statusManager),
+        processos = [(f"Download dos dados de importacao {date} - crefisa",  download_importados_storm().tqdm_bar),
+                    (f"Limpando e trnsformando dados de importacao {date} - crefisa", cleaningTransform_importation.cleaningImportation),
+                     (f"Gerenciando status de importação - crefisa", cleaningTransform_importation.statusManager),
                      (f"Limpando e trnsformando dados de comissão {date} - {bank}", comissionToSorm.comissionToStorm().makeReport),
-                    (f"Limpando e trnsformando dados de produção {date} - {bank}", producionToSorm.productionToStorm().makeReport)
-                    ]
+                    (f"Limpando e trnsformando dados de comissão {date} - {bank}", producionToSorm.productionToStorm().makeReport)]
         
        
         
@@ -27,4 +25,4 @@ def main(date: datetime.date, bank: str):
                 pbar_total.update(1)
 
 # Debug
-# main(date = datetime.date(2024,8,13), bank='FACTA FINANCEIRA')
+main(date = datetime.date(2024,6,13), bank='V8 DIGITAL')

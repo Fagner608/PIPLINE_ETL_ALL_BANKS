@@ -151,7 +151,7 @@ class download():
                 # if not path.exists(path_to_save):
                 if True:
                     driver = self.driver
-                    date_work_start = (date_work - datetime.timedelta(days = 15))
+                    date_work_start = (date_work - datetime.timedelta(days = 20))
                     date_work = date_work.strftime("%d/%m/%Y")
                     # Entrando na página de comissões
                     ########################## Inicie aqui o codigo de extracao ##########################|
@@ -169,6 +169,9 @@ class download():
                             WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, tag))).send_keys(date)
                             WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, tag))).send_keys(date)
                         ActionChains(driver).send_keys(Keys.TAB)
+
+                        ################### problema esta aqui ###################
+                        
                         button = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div/div/div[2]/div[2]/button[1]')))
                         driver.execute_script("arguments[0].click();", button)
                         driver.execute_script("arguments[0].click();", button)
@@ -224,7 +227,7 @@ class download():
 
 
         processos = [
-             ("Download do relatório de conta corrente FACTA", self.dowloadContaCorrente),
+            #  ("Download do relatório de conta corrente FACTA", self.dowloadContaCorrente),
              ("Download do relatório de comissão FACTA", self.dowloadComission)
              ]
         
@@ -239,5 +242,5 @@ class download():
                     
                 pbar_total.update(1)
 
-# Debug - exemplo de chamaa do modulo
+# Debug - exemplo de chamar do modulo
 # download().tqdm_bar(date_work = datetime.date.today())

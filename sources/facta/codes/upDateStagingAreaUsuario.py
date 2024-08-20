@@ -36,7 +36,7 @@ class updateStaginAreaUsuario():
 
         query = '''
             select distinct 
-                proposta
+                codigo
             from 
                 staging_area
            '''
@@ -66,7 +66,7 @@ class updateStaginAreaUsuario():
                 -- Atualizando usuario
                 UPDATE staging_area
                 set codigo_usuario_digitador = '{self.conciliation_user(proposta=proposta, contaCorrente=contaCorrente)}'
-                where proposta == {proposta};
+                where codigo == {proposta};
 
                 '''
                 try:

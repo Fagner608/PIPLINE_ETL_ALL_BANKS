@@ -11,11 +11,10 @@ if __name__ == "__main__":
     
     # Transform and Load
     date = datetime.date.today() - datetime.timedelta(days = 5)
-    # date = datetime.date(2024, 8, 16)
     while date <= datetime.date.today():
         main_tranformLoad.main(date=date)
         date += datetime.timedelta(days = 1)
     
     # Gerando relatórios Storm
-    mainStorm.main(date=datetime.date.today(), bank='FACTA FINANCEIRA')
+    mainStorm.main(date=datetime.date.today(), bank='BANCO CREFISA')
         

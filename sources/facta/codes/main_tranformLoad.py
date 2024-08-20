@@ -7,12 +7,14 @@ from tqdm import tqdm
 
 def main(date: datetime.date):
     
-    processos = [(f"Limpando e trnsformando dados de comissão {date} - facta", cleaningTransforma_comission.CleaningComission),
+    processos = [
+                (f"Limpando e transformando dados de comissão {date} - facta", cleaningTransforma_comission.CleaningComission),
                  (f"Atualizando tabelas do banco de dados {date} - facta", cleaningTransforma_comission.load_comission),
-                 (f"Limpando e trnsformando dados de produção {date} - facta", cleaningTransform_production.CleaningProduction),
+                 (f"Limpando e transformando dados de produção {date} - facta", cleaningTransform_production.CleaningProduction),
                  (f"Atualizando tabelas do banco de dados {date} - facta", cleaningTransform_production.load_production),
-                 (f"Limpando e trnsformando dados de produção {date} - facta", cleaningTransform_contracts.CleaningContracts),
-                 (f"Input dos contratos {date} - facta", cleaningTransform_contracts.load_contracts)]
+                 (f"Limpando e transformando dados de produção {date} - facta", cleaningTransform_contracts.CleaningContracts),
+                 (f"Input dos contratos {date} - facta", cleaningTransform_contracts.load_contracts)
+                 ]
 
               
     with tqdm(total = len(processos), desc = "Executando Transformação e carga - facta") as pbar_total:
@@ -23,5 +25,5 @@ def main(date: datetime.date):
 
 
 # Debug
-# main(date = datetime.date(2024, 7, 23))
+# main(date = datetime.date(2024, 8, 16))
 # print("Transformação e carga facta finalizados.")

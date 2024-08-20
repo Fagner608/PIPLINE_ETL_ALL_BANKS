@@ -59,6 +59,6 @@ class mk_paths():
 
 if __name__ == '__main__':
 
-    banks = ['facta']
+    banks = ['v8']
 
     mk_paths(banks_list = banks)

@@ -7,7 +7,7 @@ from cleaningTransformaData import cleaningData, transformationData, saveStageAr
 from inputDataTransformed import inputsDB
 import datetime
 from upDateStagingAreaContractsFacta import updateStaginAreaContracts
-import cleaningTransform_extra, cleaningTransform_usuario
+import cleaningTransform_extra, cleaningTransform_usuario, upDateStagingAreaZeroContracts
 
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningContracts(date: datetime.date):
@@ -160,7 +160,9 @@ def load_contracts(date: datetime.date):
     inputsDB().loadInput(list_tables = list_tables,
                          total_dict = total_dict, contracts = True, staging_area_contato = 'codigo')
     
+    # Método para deletar do banco de dados propostas que tenha comissão e bônus zerados
+    upDateStagingAreaZeroContracts.updateStaginAreaZero().upDatating()
 
 #Debug
-# CleaningContracts(date=datetime.date(2024, 7, 23))
+# CleaningContracts(date=datetime.date(2024, 8, 16))
 # load_contracts(date=datetime.date(2024, 7, 23))

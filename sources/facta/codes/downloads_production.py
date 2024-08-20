@@ -157,4 +157,4 @@ class download_production():
                 pbar_total.update(1)
 
 # Debug - exemplo de chamaa do modulo
-download_production().tqdm_bar(date_work = datetime.date.today())
+# download_production().tqdm_bar(date_work = datetime.date.today())

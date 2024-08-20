@@ -35,6 +35,15 @@ class cleaningData():
                 '''
             
                 dataFrame.columns = [str(x).strip().replace(" ", "_").lower() for x in dataFrame.columns]
+                dataFrame.columns = [sub(r"\%|\.", "", x) for x in dataFrame.columns]
+                
+                dataFrame.columns = [sub(r'[áàãâä]', 'a', x) for x in dataFrame.columns]
+                dataFrame.columns = [sub(r'[éèêë]', 'e', x) for x in dataFrame.columns]
+                dataFrame.columns = [sub(r'[íìîï]', 'i', x) for x in dataFrame.columns]
+                dataFrame.columns = [sub(r'[óòõôö]', 'o', x) for x in dataFrame.columns]
+                dataFrame.columns = [sub(r'[úùûü]', 'u', x) for x in dataFrame.columns]
+                dataFrame.columns = [sub(r'[ç]', 'c', x) for x in dataFrame.columns]
+                dataFrame.columns = [sub(r"['’]", '', x) for x in dataFrame.columns]
                 
                 if typeData[0] == 'monetary':
                     for column in columns_convert:
