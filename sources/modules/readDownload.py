@@ -25,7 +25,9 @@ class read_downaload():
                 parse_dates = None,
                 format_parse_dates = None,
                 encoding = None,
-                converters = None
+                converters = None,
+                skiprows = None,
+                skipfooter = None
                 ):
     
         '''
@@ -62,7 +64,10 @@ class read_downaload():
                                       sheet_name=sheet_name,
                                       parse_dates=parse_dates,
                                       date_format=format_parse_dates,
-                                      converters=converters) # type: ignore
+                                      converters=converters,
+                                      skiprows = skiprows
+                                    #   skipfooter = skipfooter
+                                      ) # type: ignore
                 
             elif engine == 'html':
                 dados = pd.read_html(path_to_read + file,

@@ -26,49 +26,34 @@ class updateStaginAreaCrefisa():
         # exemlo
         query = f'''
 
+        -- inserindo nome_operacao
+        alter table staging_area add column nome_operacao text;
+        
+
         -- atualizando banco
         update staging_area
-        set banco = '{bank}'
-        where banco = 'crefisa'; -- ajuste o banco, para string que a tabela staging_area esta retornando
+        set descr_promotora = '{bank}'
+        where descr_promotora = 'v8bank'; -- ajuste o banco, para string que a tabela staging_area esta retornando
         
-        -- atualizando convenio
-        update staging_area
-        set convenio = 'CRÉDITO PESSOAL'
-        where convenio = 'baixa_renda';
-        
-        update staging_area
-        set convenio = 'CRÉDITO PESSOAL'
-        where convenio = 'inss';
         
         -- atualizando tipo de contrato/opercao
         update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'novo_contrato';
+        set nome_operacao = 'CARTÃO C/ SAQUE';
         
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'antecipacao_1_parcela';
         
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'antecipacao_1_parcela';
-        
-        update staging_area
-        set tipo_contrato = 'REFINANCIAMENTO'
-        where tipo_contrato = 'refinanciamento';
-
-        -- Atualizando cliente id
-        alter table staging_area add column cliente_id text;
-        update staging_area
-        set cliente_id = cliente.cliente_id
-        from cliente
-        where staging_area.cpf == cliente.cpf_cliente
+        -- atualizando convenio
+        update staging_area set descr_tabela = CASE
+        WHEN descr_tabela in ('inssrmcbank', 'inss_cbrep_legalbank', 'inssrmc_rep_legalbank') then 'INSS'
+        WHEN descr_tabela in ('inss_cartao_beneficiobank') then 'INSS Cartão Benefício'
+        else descr_tabela
+        end;
 
         '''
         try:
             cur.executescript(query)
         except sqlite3.OperationalError:
-            pass
+            raise
+            # pass
         con.commit()
         cur.close()
         con.close()

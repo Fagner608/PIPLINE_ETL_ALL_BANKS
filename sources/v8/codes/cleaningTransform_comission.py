@@ -30,15 +30,14 @@ def CleaningComission(date: datetime.date):
                                         bank='v8', # informe o nome do banco conforme esta no diretorio criado
                                         date = date,
                                         type_transference = ['comission'],
-                                        engine = ['csv'], # informe o engine para leitura
-                                        encoding = 'latin1',
-                                        sep = ';',
+                                        engine = ['excel'], # informe o engine para leitura
                                         # decimal = ',',
                                         # thousands = '.',
-                                        # sheet_name = 0,
-                                        # parse_dates=['pag_comissao'],
-                                        # format_parse_dates='%Y/%m/%d',
+                                        sheet_name = 0,
+                                        # parse_dates=['DATA_REGISTRO', 'DATA_PAGAMENTO_CLIENTE', 'DATAEFETIVACAO'],
+                                        # format_parse_dates='%d/%m/%Y',
                                         header = 0
+
                 )
 
 
@@ -156,4 +155,4 @@ def load_comission(date: datetime.date):
 # debug   
 date = datetime.date(2024, 8, 16) 
 CleaningComission(date=date)
-load_comission(date=date)
+# load_comission(date=date)

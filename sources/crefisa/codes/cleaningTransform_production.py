@@ -38,7 +38,7 @@ def crefisaCleaningProduction(date: datetime.date):
                                                         'banco', 'convenio', 'tabela', 'usuario_digit_banco',
                                                         'usuario_digit_banco_subestabelecido', 'sub_usuario',
                                                         'login_sub_usuario', 'situacao_pendencia', 'tipo_contrato',
-                                                        'codigo_produto', 'codigo_convenio', 'fisico_empresa', 'usuário_fisico_empresa',
+                                                        'codigo_produto', 'codigo_convenio', 'fisico_empresa', 'usuario_fisico_empresa',
                                                         'sit_pagamento_comissao', 'sub_status', 'perc_bonus_repasse', 'numero_ade'
                                                         ]
                                                 )

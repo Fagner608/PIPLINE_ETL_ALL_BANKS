@@ -1,7 +1,9 @@
 # obter propostas
 import pandas as pd
 import datetime
-
+import os
+import locale
+locale.setlocale(locale.LC_MONETARY, 'pt_BR.UTF-8')
 # Classe para relatorio de producao - recebe contratos nao importados, e cria relatorio
  # basta ajustar os campos que o storm espera receber
 import sys
@@ -18,11 +20,12 @@ class comissionToStorm():
             self.columns_to_rename = ['#ADE#',	
                                       '#VALOR_BASE#',	
                                       '#VALOR_CMS#',	
-                                      '#VALOR_BONUS#',	
-                                      '#PRAZO#',	
-                                      '#DATA_DIGITACAO#',	
-                                      '#CODIGO_TABELA#',	
-                                      '#VALOR_BASE_BRUTO#']
+                                    #   '#VALOR_BONUS#',	
+                                    #   '#PRAZO#',	
+                                    #   '#DATA_DIGITACAO#',	
+                                    #   '#CODIGO_TABELA#',	
+                                    #   '#VALOR_BASE_BRUTO#'
+                                    ]
       
 		
 
@@ -31,12 +34,11 @@ class comissionToStorm():
                                    "numero_ade",
                                    "valor_liquido",
                                    'valor_cms_repasse',
-                                   'valor_bonus_repasse',
-                                   "quantidade_parcela_prazo",
-                                   "data_pagamento_cliente",	
-                                   "nome_tabela"
-                                   
-                                   ]
+                                #    'valor_bonus_repasse',
+                                #    "quantidade_parcela_prazo",
+                                #    "data_pagamento_cliente",	
+                                #    "nome_tabela"
+                                    ]
 
 
         def comissionReport(self, date: datetime.date, bank: str):
@@ -57,12 +59,12 @@ class comissionToStorm():
             if dados is not None:
                 dados = dados[self.columns_select]
 
-                dados['#VALOR_BASE_BRUTO#'] = dados['valor_liquido']
                 # dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
-  
+                dados['valor_cms_repasse'] = dados['valor_cms_repasse'].map(lambda x: locale.currency(x, symbol=False, grouping=True))
                 dados.columns = self.columns_to_rename
-                
-                dados.to_csv(path_to_save + f'{bank}.csv', index = False)
+                dados['#TIPO_COMISSAO#'] = "FLAT"
+                os.makedirs(path_to_save, exist_ok = True)
+                dados.to_csv(path_to_save + f'{bank}.csv', index = False, sep = ';')
 
 # debug     
-# comissionToStorm().makeReport(date = datetime.date(2024, 6, 20), bank = 'BANCO CREFISA')
+# comissionToStorm().makeReport(date = datetime.date(2024, 8, 21), bank = 'V8 DIGITAL')

@@ -48,7 +48,7 @@ def CleaningProduction(date: datetime.date):
         # metodo para limpeza de strings
         result = cleaningData().cleaning(dataFrame = result,
                                             typeData = ['string'],
-                                            columns_convert =['cpf', 'averbador', 'banco', 'tipo_operação', 'status', 'análise_crivo', 'atendente/vendedor', 
+                                            columns_convert =['cpf', 'averbador', 'banco', 'tipo_operacao', 'status', 'analise_crivo', 'atendente/vendedor', 
                                                               'tabela_digitada', 'consulta_srcc', 'aceita_pela_ctc'
                                                         ] # informe variaveis que contenham as strings que deseja limpar (Não insira atributos que contenham: nome de cliente, Id de contrato ou proposta, número de contrato ou proposta, datas SE estes campos precisarem manter o valor original)
                                                 )
@@ -103,7 +103,7 @@ def load_production(date: datetime.date):
 
     # preencher os atributos com o correspondente da tabela carregada no staging_area
     #Tabela tipo_contrato (ex: novo, margem_livre, etc - como vier na fonte)
-    total_dict[0]['tipo'] = 'tipo_operação'
+    total_dict[0]['tipo'] = 'tipo_operacao'
 
     # tabela tipo_operacao (ex: )
     total_dict[1]['nome_operacao'] = 'averbador'
@@ -142,5 +142,5 @@ def load_production(date: datetime.date):
     
 
 # Debug
-CleaningProduction(date = datetime.date(2024, 7, 23))
+# CleaningProduction(date = datetime.date(2024, 7, 23))
 # load_production(date = datetime.date(2024, 7, 23))

@@ -29,14 +29,15 @@ class updateStaginAreaContracts():
         -- incluindo sit_pagamento_cliente
         alter table staging_area add column sit_pagamento_cliente text;
         alter table staging_area add column nome_operacao text;
+        alter table staging_area add column percentual_cms_a_vista real;
         
         update staging_area
         set sit_pagamento_cliente = 'PAGO';
 
         -- atualizando banco
         update staging_area
-        set promotora = '{bank}'
-        where promotora = 'V8BANK'; -- ajuste o banco, para string que a tabela staging_area esta retornando
+        set descr_promotora = '{bank}'
+        where descr_promotora = 'v8bank'; -- ajuste o banco, para string que a tabela staging_area esta retornando
         
         
         -- atualizando tipo de contrato/opercao
@@ -45,10 +46,11 @@ class updateStaginAreaContracts():
 
 
         -- atualizando convenio
-        update staging_area set descricao = CASE
-        WHEN descricao in ('inssrmc_bank', 'inssrmc_rep_legalbank') then 'INSS'
-        WHEN descricao in ('inss_cartao_beneficiobank') then 'INSS Cartão Benefício'
-        else descricao
+        update staging_area set descr_tabela = CASE
+        WHEN codigo_orgao in ('202290') then 'INSS'
+        WHEN codigo_orgao in ('202284') then 'INSS - CARTÃO BENEFÍCIO'
+        WHEN codigo_orgao in ('202329 ') then 'FEDERAL - CARTÃO BENEFÍCIO'
+        else descr_tabela
         end;
 
 
@@ -57,7 +59,27 @@ class updateStaginAreaContracts():
         update staging_area
         set cliente_id = cliente.cliente_id
         from cliente
-        where staging_area.cpf == cliente.cpf_cliente;
+        where staging_area.cpf_cliente == cliente.cpf_cliente;
+
+        
+        
+        -- Calculo percentual de comissao
+        UPDATE staging_area
+        SET percentual_cms_a_vista = CASE
+            WHEN codigo_orgao IN ('202290', '202284') THEN 200.0
+            WHEN codigo_orgao IN ('202329') THEN 320.0
+            ELSE 0
+        END;
+
+        
+        -- Calculo de comissao
+        UPDATE staging_area
+        SET vlr_de_comissao = CASE
+            WHEN codigo_orgao IN ('202290', '202284') THEN vlr_emprestimo * percentual_cms_a_vista
+            WHEN codigo_orgao IN ('202329') THEN vlr_emprestimo * percentual_cms_a_vista
+            ELSE 0
+        END;
+
 
 
         '''

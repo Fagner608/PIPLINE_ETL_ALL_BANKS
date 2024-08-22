@@ -39,8 +39,7 @@ def CleaningComission(date: datetime.date):
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
     if comission is not None:
         result = comission
-        print(result)
-
+        
         # metodo para limpeza de valores monetarios
         result = cleaningData().cleaning(dataFrame = result,
                                         typeData = ['monetary'],
@@ -149,5 +148,5 @@ def load_comission(date: datetime.date):
     
 
 # Debug
-CleaningComission(date=datetime.date(2024,8,16))
+# CleaningComission(date=datetime.date(2024,8,16))
 # load_comission(date=datetime.date(2024,5,24))

@@ -163,6 +163,7 @@ def load_contracts(date: datetime.date):
     # Método para deletar do banco de dados propostas que tenha comissão e bônus zerados
     upDateStagingAreaZeroContracts.updateStaginAreaZero().upDatating()
 
+    
 #Debug
 # CleaningContracts(date=datetime.date(2024, 8, 16))
-# load_contracts(date=datetime.date(2024, 7, 23))
+# load_contracts(date=datetime.date(2024, 8, 21))

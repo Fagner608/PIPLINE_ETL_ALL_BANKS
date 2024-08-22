@@ -49,4 +49,4 @@ class updateStaginAreaZero():
         con.close()
         
 #debug
-updateStaginAreaZero().upDatating()
+# updateStaginAreaZero().upDatating()

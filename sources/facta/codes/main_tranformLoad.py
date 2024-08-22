@@ -25,5 +25,5 @@ def main(date: datetime.date):
 
 
 # Debug
-# main(date = datetime.date(2024, 8, 16))
+# main(date = datetime.date(2024, 8, 21))
 # print("Transformação e carga facta finalizados.")
