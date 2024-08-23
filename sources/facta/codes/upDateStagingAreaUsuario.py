@@ -8,8 +8,8 @@ import pandas as pd
 class updateStaginAreaUsuario():
 
     '''
-    Método base para atualizações na tabela staging_area.
-    Cada tabela demandará seu conjunto de instruções sql.
+    Método para localizar o código de usuário.
+    
     '''
 
     def __init__(self):
@@ -24,7 +24,7 @@ class updateStaginAreaUsuario():
                     
                     return retorno[0]
                 else:
-                     return
+                     return 
             
     def propostasUnicas(self):
          

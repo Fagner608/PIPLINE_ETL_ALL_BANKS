@@ -74,7 +74,7 @@ class updateStaginAreaContracts():
         
         -- Atualizando convenio
         UPDATE staging_area SET averbador = CASE 
-            WHEN averbador = '3' THEN 'INSS'
+            WHEN averbador IN ('3', '10226') THEN 'INSS'
             WHEN averbador = '20095' THEN 'FGTS'
             WHEN averbador = '23' THEN 'MARINHA'
             WHEN averbador IN ('FGTS', 'INSS', 'RMC', 'INSS Cartão') THEN 'INSS'

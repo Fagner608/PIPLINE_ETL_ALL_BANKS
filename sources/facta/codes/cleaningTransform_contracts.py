@@ -6,6 +6,7 @@ from readDownload import read_downaload
 from cleaningTransformaData import cleaningData, transformationData, saveStageArea
 from inputDataTransformed import inputsDB
 import datetime
+import re
 from upDateStagingAreaContractsFacta import updateStaginAreaContracts
 import cleaningTransform_extra, cleaningTransform_usuario, upDateStagingAreaZeroContracts
 
@@ -58,6 +59,7 @@ def CleaningContracts(date: datetime.date):
         # Se necessario faca as demais alteracoes aqui
             #exemplo:
         final_contracts['codigo_tabela'] = final_contracts['ds_tabcom'].str.split('__', expand = True)[0]
+        final_contracts['codigo_tabela'] = final_contracts['codigo_tabela'].map(lambda x: re.findall("\d{5}", x)[0])
         final_contracts['nome_tabela'] = final_contracts['ds_tabcom'].str.split('__', expand = True)[1]
         # metodo par enviar os dados para staging_area no banco de dados
         saveStageArea().inputTable(table = final_contracts)
@@ -81,9 +83,7 @@ def load_contracts(date: datetime.date):
     cleaningTransform_extra.CleaningExtra(date=date)
 
     cleaningTransform_usuario.CleaningUser(date=date)
-    
-    # Fazendo conciliação com contaCorrente
-    # CleaningExtra(date=date)
+
     
     #lista para consultar os atributos das tabelas
     list_tables = ['contrato']
@@ -165,5 +165,5 @@ def load_contracts(date: datetime.date):
 
     
 #Debug
-# CleaningContracts(date=datetime.date(2024, 8, 16))
-# load_contracts(date=datetime.date(2024, 8, 21))
+# CleaningContracts(date=datetime.date(2024, 8, 23))
+# load_contracts(date=datetime.date(2024, 8, 23))

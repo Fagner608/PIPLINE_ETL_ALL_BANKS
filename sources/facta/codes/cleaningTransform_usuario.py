@@ -7,7 +7,7 @@ from cleaningTransformaData import cleaningData, transformationData, saveStageAr
 from inputDataTransformed import inputsDB
 import datetime
 from upDateStagingAreaUsuario import updateStaginAreaUsuario
-
+from upDateStagingAreaUsuario_delete import updateStaginAreaUsuarioDelete
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningUser(date: datetime.date):
 
@@ -37,8 +37,8 @@ def CleaningUser(date: datetime.date):
         production = production.drop(production.shape[0]-1)
         final_production = production[['Código', 'Login']]
         updateStaginAreaUsuario().upDatating(contaCorrente = final_production)
-        
+        updateStaginAreaUsuarioDelete().upDatating()
 
 
 # Debug
-# CleaningUser(date = datetime.date(2024, 7, 23))
+# CleaningUser(date = datetime.date(2024, 8, 23))

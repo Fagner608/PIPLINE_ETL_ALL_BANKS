@@ -4,8 +4,7 @@ import datetime
 import mainStorm
 
 
-if __name__ == "__main__":
-
+def main():
     # Extract
     # main_download.main(date = datetime.date.today())
     
@@ -17,4 +16,7 @@ if __name__ == "__main__":
     
     # Gerando relatórios Storm
     mainStorm.main(date=datetime.date.today(), bank='BANCO CREFISA')
+
+if __name__ == "__main__":
+    main()
         

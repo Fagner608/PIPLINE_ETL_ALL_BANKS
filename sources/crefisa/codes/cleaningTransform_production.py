@@ -35,10 +35,7 @@ def crefisaCleaningProduction(date: datetime.date):
                                             typeData = ['string'],
                                             columns_convert =['filial', 'grupo_vendedor', 'cod_vendedor', 'vendedor', 
                                                         'prazo',  'perc_comissao_repasse', 'cpf', 'sit_banco', 'sit_pagamento_cliente',
-                                                        'banco', 'convenio', 'tabela', 'usuario_digit_banco',
-                                                        'usuario_digit_banco_subestabelecido', 'sub_usuario',
-                                                        'login_sub_usuario', 'situacao_pendencia', 'tipo_contrato',
-                                                        'codigo_produto', 'codigo_convenio', 'fisico_empresa', 'usuario_fisico_empresa',
+                                                        'banco', 'convenio', 'tabela','sub_usuario', 'situacao_pendencia', 'tipo_contrato', 'codigo_produto', 'codigo_convenio', 'fisico_empresa', 'usuario_fisico_empresa',
                                                         'sit_pagamento_comissao', 'sub_status', 'perc_bonus_repasse', 'numero_ade'
                                                         ]
                                                 )
@@ -49,7 +46,7 @@ def crefisaCleaningProduction(date: datetime.date):
 
         ## Spiit no tipo_contrato (001 - Novo Contrato)
         final_production['tipo_contrato'] = final_production['tipo_contrato'].str.split("__", expand = True)[1]
-        
+        final_production['login_sub_usuario'] = final_production['login_sub_usuario'].str.replace("'", "")
         saveStageArea().inputTable(table = final_production)
 
 
@@ -117,5 +114,5 @@ def load_crefisa_production(date: datetime.date):
     
 
 # Debug
-# crefisaCleaningProduction(date = datetime.date(2024,7,27))
+# crefisaCleaningProduction(date = datetime.date(2024,8,23))
 # load_crefisa_production(date = datetime.date(2024,7,27))

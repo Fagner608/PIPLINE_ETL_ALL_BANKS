@@ -37,7 +37,8 @@ class comissionToStorm():
                                    'valor_bonus_repasse',
                                    "quantidade_parcela_prazo",
                                    "data_pagamento_cliente",	
-                                   "nome_tabela"
+                                   "nome_tabela",
+                                   'tipo_operacao'
                                    
                                    ]
 
@@ -62,11 +63,19 @@ class comissionToStorm():
 
                 dados['#VALOR_BASE_BRUTO#'] = dados['valor_liquido']
                 dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
-                dados['valor_cms_repasse'] = dados['valor_cms_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True))
-                dados['valor_bonus_repasse'] = dados['valor_bonus_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True))
-                dados.columns = self.columns_to_rename
+                dados['valor_cms_repasse'] = dados['valor_cms_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
+                dados['valor_bonus_repasse'] = dados['valor_bonus_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
+                cartao = dados[dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO")]
+                normal = dados[~dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO")]
+                cartao.drop(['tipo_operacao'], axis = 1, inplace = True)
+                normal.drop(['tipo_operacao'], axis = 1, inplace = True)
+                cartao.columns = self.columns_to_rename
+                normal.columns = self.columns_to_rename
                 os.makedirs(path_to_save, exist_ok=True)
-                dados.to_csv(path_to_save + f'{bank}.csv', index = False, sep = ';')
+                if not cartao.empty:
+                    cartao.to_csv(path_to_save + f'CARTAO {bank}.csv', index = False, sep = ';')
+                if not normal.empty:
+                    normal.to_csv(path_to_save + f'{bank}.csv', index = False, sep = ';')
 
 # debug     
 # comissionToStorm().makeReport(date = datetime.date(2024, 8, 16), bank = 'FACTA FINANCEIRA')
