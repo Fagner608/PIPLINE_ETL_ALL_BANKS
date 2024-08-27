@@ -50,7 +50,6 @@ def crefisaCleaningContracts(date: datetime.date):
         final_production['usuario_digit_banco'] = final_production['usuario_digit_banco'].str.split(" - ", expand = True)[1]
         final_production['cod_usuario_digit_banco'] = final_production['usuario_digit_banco'].str.split(" - ", expand = True)[0]
         final_production['sub_usuario'] = final_production['sub_usuario'].str.split("_\(", expand = True)[0]
-        final_production['login_sub_usuario'] = final_production['login_sub_usuario'].str.replace("'", "")
         # print(final_production[['vlr_parc', 'valor_bruto', 'valor_liquido', 'valor_base', 'vlr_comissao_repasse', 'vlr_bonus_repasse']].head())
         saveStageArea().inputTable(table = final_production)
 
@@ -140,6 +139,6 @@ def load_contracts(date: datetime.date):
     
 
 #Debug
-# crefisaCleaningContracts(date=datetime.date(2024, 8, 23))
+crefisaCleaningContracts(date=datetime.date.today())
 # load_contracts(date=datetime.date(2024, 6, 24))
 # print("finalizado")

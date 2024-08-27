@@ -7,7 +7,7 @@ import mainStorm
 
 def main():
     # Extract
-    main_download.main(date = datetime.date.today())
+    # main_download.main(date = datetime.date.today())
     
     # Transform and Load data
     date = datetime.date.today() - datetime.timedelta(days = 5)

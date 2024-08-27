@@ -1,15 +1,17 @@
 # imports
+
 import sys
 # mudulos base
 sys.path.append("../../modules")
 from readDownload import read_downaload
 from cleaningTransformaData import cleaningData, transformationData, saveStageArea
 from inputDataTransformed import inputsDB
-import datetime
-from upDateStagingAreaProduction import updateStaginArea
 
-# Funcao para executar limpeza, tratamento e transformacao
-def CleaningProduction(date: datetime.date):
+import datetime
+
+
+
+def CleaningComission(date: datetime.date):
 
     '''
         Funcao para executar limpeza, tratamento e transformacao no relatorio de comissao
@@ -20,56 +22,63 @@ def CleaningProduction(date: datetime.date):
     '''
 
     ## Carga da tabela de comissão
-    production = read_downaload().read_data(
+    comission = read_downaload().read_data(
                         bank='crefisa', # informe o nome do banco conforme esta no diretorio criado
                         date = date,
-                        type_transference = ['production'],
-                        engine = ['html'],# informe o engine para leitura
+                        type_transference = ['comission'],
+                        engine = ['csv'], # informe o engine para leitura
                         decimal = ',',
                         thousands = '.',
-                        parse_dates=['DATA_DIGIT_BANCO', 'DATA_PAGAMENTO_CLIENTE', 'DATA_PAGAMENTO_COMISSAO', 'DATA_FISICO_EMPRESA', 'DATA_SUB_STATUS'],
+                        parse_dates=['PG Cliente'],
                         format_parse_dates='%d/%m/%Y',
                         header = 0
                     )
+
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
-    if production is not None:
+    if comission is not None:
+        result = comission
 
         # metodo para limpeza de valores monetarios
-        result = cleaningData().cleaning(dataFrame = production,
-                                                typeData = ['monetary'],
-                                                columns_convert = ['vlr_parc', 'valor_bruto', 'valor_liquido', 'valor_base', 'vlr_comissao_repasse', 'vlr_bonus_repasse'] # informe variaveis com valores monetarios, conforme exemplo
-                                                )
+        result = cleaningData().cleaning(dataFrame = result,
+                                        typeData = ['monetary'],
+                                        columns_convert = ['valor_base', 'r$_à_vista', 'r$_bônus'] # informe variaveis com valores monetarios, conforme exemplo
+                                        )
+
 
         # metodo para limpeza de strings
         result = cleaningData().cleaning(dataFrame = result,
                                             typeData = ['string'],
-                                            columns_convert =['filial', 'grupo_vendedor', 'cod_vendedor', 'vendedor', 
-                                                        'prazo',  'perc_comissao_repasse', 'cpf', 'sit_banco', 'sit_pagamento_cliente',
-                                                        'banco', 'convenio', 'tabela', 'usuario_digit_banco',
-                                                        'usuario_digit_banco_subestabelecido', 'sub_usuario',
-                                                        'login_sub_usuario', 'situacao_pendencia', 'tipo_contrato',
-                                                        'codigo_produto', 'codigo_convenio', 'fisico_empresa', 'usuário_fisico_empresa',
-                                                        'sit_pagamento_comissao', 'sub_status', 'perc_bonus_repasse', 'numero_ade'
+                                        
+                                        columns_convert =['físico',
+                                                        'pendência',
+                                                        'contrato_id',
+                                                        'nº_proposta',
+                                                        'cpf_cliente',
+                                                        'banco',
+                                                        'tipo_contrato',
+                                                        '%_à_vista',
+                                                        '%_bônus',
+                                                        'usuário_dig_banco'
                                                         ] # informe variaveis que contenham as strings que deseja limpar (Não insira atributos que contenham: nome de cliente, Id de contrato ou proposta, número de contrato ou proposta, datas SE estes campos precisarem manter o valor original)
                                                 )
-        
+
         # metodo para transforacao dos valores monetarios
-        final_production = transformationData().convert_monetary(dataFrame = result,
-                                        columns_convert = ['vlr_parc', 'valor_bruto', 'valor_liquido', 'valor_base', 'vlr_comissao_repasse', 'vlr_bonus_repasse'])
+        final_comission = transformationData().convert_monetary(dataFrame = result,
+                                    columns_convert = ['valor_base', 'r$_à_vista', 'r$_bônus'] # informe variaveis com valores monetarios, conforme exemplo
+                                    )
 
 
         # Se necessario faca as demais alteracoes aqui
             #exemplo:
-            ## Spiit no tipo_contrato (001 - Novo Contrato)
-        # final_production['tipo_contrato'] = final_production['tipo_contrato'].str.split("__", expand = True)[1]
-        
+        # final_comission['codigo_usuario_digitador'] = final_comission['usuário_dig_banco'].str.split('__', expand = True)[0]
+        # final_comission['nome_usuario_digitador'] = final_comission['usuário_dig_banco'].str.split('__', expand = True)[1]
+            
         # metodo par enviar os dados para staging_area no banco de dados
-        saveStageArea().inputTable(table = final_production)
+        saveStageArea().inputTable(table = final_comission)
 
 
+def load_comission(date: datetime.date):
 
-def load_production(date: datetime.date):
-    
     '''
         Funcao que prepara os dados carregados na staging_area para carga definitiva no banco de dados
 
@@ -79,9 +88,7 @@ def load_production(date: datetime.date):
 
     '''
 
-    # Atualizando valores na tabela staging_area
-    updateStaginArea().upDatating(bank='INSIRA O BANCO')
-    
+
     #lista para consultar os atributos das tabelas
     list_tables = [
             'tipo_contrato',
@@ -133,12 +140,11 @@ def load_production(date: datetime.date):
     total_dict[8]['nome_tabela'] = ''
     total_dict[8]['codigo_tabela'] = ''
 
-
     # metodo que fara o input dos dados
     inputsDB().loadInput(list_tables = list_tables,
                          total_dict = total_dict)
     
 
 # Debug
-# CleaningProduction(date = datetime.date(2024,5,24))
-# load_production(date = datetime.date(2024,5,24))
+# CleaningComission(date=datetime.date(2024,5,24))
+# load_comission(date=datetime.date(2024,5,24))

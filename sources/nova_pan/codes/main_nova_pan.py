@@ -10,12 +10,13 @@ def main():
     
     # Transform and Load
     date = datetime.date.today() - datetime.timedelta(days = 5)
+    # date = datetime.date.today()
     while date <= datetime.date.today():
         main_tranformLoad.main(date=date)
         date += datetime.timedelta(days = 1)
     
     # Gerando relatórios Storm
-    mainStorm.main(date=datetime.date.today(), bank='Insira o banco')
+    mainStorm.main(date=datetime.date.today(), bank='BANCO PAN')
 
 
 if __name__ == "__main__":

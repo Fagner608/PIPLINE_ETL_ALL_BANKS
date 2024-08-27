@@ -65,7 +65,7 @@ class comissionToStorm():
                      
                 dados.columns = self.columns_to_rename
                 os.makedirs(path_to_save, exist_ok=True)
-                dados.to_csv(path_to_save + f'{bank}.csv', index = False, sep = ';')
+                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
 
 # debug     
 # comissionToStorm().makeReport(date = datetime.date(2024, 6, 21), bank = 'BANCO CREFISA')

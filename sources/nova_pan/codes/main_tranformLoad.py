@@ -8,10 +8,10 @@ from tqdm import tqdm
 def main(date: datetime.date):
     
     processos = [
-        (f"Limpando e trnsformando dados de comissão {date} - insira o banco", cleaningTransforma_comission.CleaningComission),
+                 (f"Limpando e trnsformando dados de comissão {date} - insira o banco", cleaningTransforma_comission.CleaningComission),
                  (f"Atualizando tabelas do banco de dados {date} - insira o banco", cleaningTransforma_comission.load_comission),
-                 (f"Limpando e trnsformando dados de produção {date} - insira o banco", cleaningTransform_production.CleaningProduction),
-                 (f"Atualizando tabelas do banco de dados {date} - insira o banco", cleaningTransform_production.load_production),
+                #  (f"Limpando e trnsformando dados de produção {date} - insira o banco", cleaningTransform_production.CleaningProduction),
+                #  (f"Atualizando tabelas do banco de dados {date} - insira o banco", cleaningTransform_production.load_production),
                  (f"Limpando e trnsformando dados de produção {date} - insira o banco", cleaningTransform_contracts.CleaningContracts),
                  (f"Input dos contratos {date} - insira o banco", cleaningTransform_contracts.load_contracts)
                  ]
@@ -25,5 +25,5 @@ def main(date: datetime.date):
 
 
 # Debug
-# main(date = datetime.date(2024,6,18))
+# main(date = datetime.date.today())
 # print("Transformação e carga insira o banco finalizados.")

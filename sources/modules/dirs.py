@@ -33,7 +33,7 @@ class mk_paths():
             path_download_production = path_download + 'production'
             path_download_importation = path_download + 'importation'
             path_download_extra = path_download + 'extra'
-            path_task = f'{root}task/'
+            # path_task = f'{root}task/'
             path_codes = f'{root}codes/'
             path_download_tmp = f'{path_codes}/download_tmp/'
             for path in [path_data,
@@ -43,8 +43,9 @@ class mk_paths():
                          path_download_production,
                          path_download_tmp,
                          path_download_importation,
-                         path_download_extra,
-                         path_task]:
+                         path_download_extra
+                        #  path_task
+                         ]:
                 os.makedirs(path, exist_ok=True)
 
         # movendo pastas
@@ -56,9 +57,8 @@ class mk_paths():
                 
 
    
-
 if __name__ == '__main__':
-
-    banks = ['v8']
+    
+    banks = ['nova']
 
     mk_paths(banks_list = banks)

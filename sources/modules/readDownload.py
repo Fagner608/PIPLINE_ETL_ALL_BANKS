@@ -27,7 +27,8 @@ class read_downaload():
                 encoding = None,
                 converters = None,
                 skiprows = None,
-                skipfooter = None
+                skipfooter = None,
+                delimiter = None
                 ):
     
         '''
@@ -54,7 +55,8 @@ class read_downaload():
                                     header=header,
                                     parse_dates = parse_dates,
                                     date_format = format_parse_dates,
-                                    converters=converters)
+                                    converters=converters,
+                                    delimiter = delimiter)
                 
             elif engine == 'excel':
                 dados = pd.read_excel(path_to_read + file,

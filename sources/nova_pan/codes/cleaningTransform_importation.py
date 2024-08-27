@@ -13,7 +13,7 @@ def cleaningImportation(bank: str, date = datetime.date):
 
     # Trabalhando na tabela de produção
     production = read_downaload().read_data(
-                    bank='facta',
+                    bank='nova_pan',
                     date = date,
                     type_transference = ['importation'],
                     engine = ['csv'],
@@ -66,5 +66,5 @@ def statusManager(bank:str, date: datetime.date):
     con.close()
 
 #Debug
-# cleaningImportation('crefisa', date=datetime.date(2024, 8, 13))
-# statusManager('crefisa', date=datetime.date(2024, 8, 13))
+# cleaningImportation('crefisa', date=datetime.date.today())
+# statusManager('crefisa', date=datetime.date(2024, 6, 16))

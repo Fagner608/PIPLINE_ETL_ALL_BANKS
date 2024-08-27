@@ -2,9 +2,6 @@
 import pandas as pd
 import datetime
 import os
-import locale
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF8')
-
 # Classe para relatorio de producao - recebe contratos nao importados, e cria relatorio
  # basta ajustar os campos que o storm espera receber
 import sys
@@ -21,11 +18,11 @@ class comissionToStorm():
             self.columns_to_rename = ['#ADE#',	
                                       '#VALOR_BASE#',	
                                       '#VALOR_CMS#',	
-                                      '#VALOR_BONUS#',	
                                       '#PRAZO#',	
                                       '#DATA_DIGITACAO#',	
-                                      '#CODIGO_TABELA#',	
-                                      '#VALOR_BASE_BRUTO#']
+                                      '#CODIGO_TABELA#',
+                                      '#VALOR_BASE_BRUTO#'	
+                                      ]
       
 		
 
@@ -34,7 +31,6 @@ class comissionToStorm():
                                    "numero_ade",
                                    "valor_liquido",
                                    'valor_cms_repasse',
-                                   'valor_bonus_repasse',
                                    "quantidade_parcela_prazo",
                                    "data_pagamento_cliente",	
                                    "nome_tabela",
@@ -62,9 +58,7 @@ class comissionToStorm():
                 dados = dados[self.columns_select]
 
                 dados['#VALOR_BASE_BRUTO#'] = dados['valor_liquido']
-                dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
-                dados['valor_cms_repasse'] = dados['valor_cms_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
-                dados['valor_bonus_repasse'] = dados['valor_bonus_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
+                # dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
                 cartao = dados[dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO")]
                 normal = dados[~dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO")]
                 cartao.drop(['tipo_operacao'], axis = 1, inplace = True)
@@ -73,9 +67,13 @@ class comissionToStorm():
                 normal.columns = self.columns_to_rename
                 os.makedirs(path_to_save, exist_ok=True)
                 if not cartao.empty:
+                    cartao['#TIPO_COMISSAO#'] = 'FLAT'
+                    cartao.drop(['#DATA_DIGITACAO#'], axis = 1, inplace = True)
+                    cartao.columns = ['#ADE#', '#VALOR_BASE#',	'#VALOR_CMS_CARTAO#', '#PRAZO#', '#CODIGO_TABELA#', '#VALOR_BASE_BRUTO#', '#TIPO_COMISSAO#']
                     cartao.to_csv(path_to_save + f'CARTAO {bank}_{date}.csv', index = False, sep = ';')
                 if not normal.empty:
                     normal.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
 
+
 # debug     
-# comissionToStorm().makeReport(date = datetime.date(2024, 8, 16), bank = 'FACTA FINANCEIRA')
+# comissionToStorm().makeReport(date = datetime.date.today(), bank = 'BANCO PAN')

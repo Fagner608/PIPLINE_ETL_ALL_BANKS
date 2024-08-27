@@ -5,7 +5,7 @@ sys.path.append("../../modules")
 from inputDataTransformed import inputsDB
 import pandas as pd
 
-class updateStaginAreaCrefisa():
+class updateStaginAreaContracts():
 
     '''
     Método base para atualizações na tabela staging_area.
@@ -25,6 +25,10 @@ class updateStaginAreaCrefisa():
         ############ Digite aqui suas querys ############
         # exemlo
         query = f'''
+
+        update staging_area
+        set sit_pagamento_cliente = 'PAGO'
+        where sit_pagamento_cliente = 'pago_ao_cliente';
 
         -- atualizando banco
         update staging_area
@@ -63,6 +67,7 @@ class updateStaginAreaCrefisa():
         set cliente_id = cliente.cliente_id
         from cliente
         where staging_area.cpf == cliente.cpf_cliente
+
 
         '''
         try:

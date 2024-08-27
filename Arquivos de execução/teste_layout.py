@@ -18,6 +18,7 @@ batch_files = {
     "V8 - CARTAO": "executa_v8 - Atalho.lnk",
     "FACTA": "executa_facta - Atalho.lnk",
     "CREFISA": "executar_crefisa - Atalho.lnk",
+    "PAN": "executar_nova_pan - Atalho",
     "ZZ": "run_zz - Atalho.lnk",
     # Adicione mais arquivos .bat conforme necessário
 }

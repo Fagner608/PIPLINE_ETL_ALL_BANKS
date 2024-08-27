@@ -67,7 +67,7 @@ class productionToStorm():
                 dados = dados[self.columns_select]
                 # dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
                 dados.columns = self.columns_to_rename
-                dados.to_csv(path_to_save + f'{bank}.csv', index = False)
+                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False)
 
 # debug     
 # productionToStorm().makeReport(date = datetime.date(2024, 6, 20), bank = 'BANCO CREFISA')
