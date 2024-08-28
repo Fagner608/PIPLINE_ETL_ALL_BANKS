@@ -44,7 +44,6 @@ class cleaningData():
                 dataFrame.columns = [sub(r'[úùûü]', 'u', x) for x in dataFrame.columns]
                 dataFrame.columns = [sub(r'[ç]', 'c', x) for x in dataFrame.columns]
                 dataFrame.columns = [sub(r"['’]", '', x) for x in dataFrame.columns]
-                
                 if typeData[0] == 'monetary':
                     for column in columns_convert:
                         dataFrame[column] = dataFrame[column].apply(lambda x: sub(r"[$R$\-]", "", str(x)).strip())

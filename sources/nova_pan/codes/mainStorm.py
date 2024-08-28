@@ -27,4 +27,4 @@ def main(date: datetime.date, bank: str):
                 pbar_total.update(1)
 
 # Debug
-main(date = datetime.date.today(), bank='BANCO PAN')
+# main(date = datetime.date.today(), bank='BANCO PAN')

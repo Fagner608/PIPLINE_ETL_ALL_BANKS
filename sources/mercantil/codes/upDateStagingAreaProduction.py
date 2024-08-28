@@ -26,36 +26,29 @@ class updateStaginArea():
         # exemlo
         query = f'''
 
+        -- inserindo atributo banco
+        alter table staging_area add column banco text;
+        alter table staging_area add column nome_operacao text;
+        
+
         -- atualizando banco
         update staging_area
-        set banco = '{bank}'
-        where banco = 'crefisa'; -- ajuste o banco, para string que a tabela staging_area esta retornando
+        set banco = '{bank}'; -- ajuste o banco, para string que a tabela staging_area esta retornando
         
         -- atualizando convenio
-        update staging_area
-        set convenio = 'CRÉDITO PESSOAL'
-        where convenio = 'baixa_renda';
+        UPDATE staging_area set nomeconvenio = CASE
+        WHEN codigoconvenio in ('161594') THEN 'FGTS'
+        WHEN codigoconvenio in ('128525') THEN 'INSS'
+        else nomeconvenio
+        end;
         
-        update staging_area
-        set convenio = 'CRÉDITO PESSOAL'
-        where convenio = 'inss';
-        
-        -- atualizando tipo de contrato/opercao
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'novo_contrato';
-        
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'antecipacao_1_parcela';
-        
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'antecipacao_1_parcela';
-        
-        update staging_area
-        set tipo_contrato = 'REFINANCIAMENTO'
-        where tipo_contrato = 'refinanciamento';
+
+        -- atualizando nome_operacao
+        UPDATE staging_area set nome_operacao = CASE
+        WHEN codigoproduto in ('13728077', '13728076', '13728078') THEN 'MARGEM LIVRE (NOVO)'
+        WHEN codigoproduto in ('13728071') THEN 'CARTÃO C/ SAQUE'
+        else nome_operacao
+        end;
 
         -- Atualizando cliente id
         alter table staging_area add column cliente_id text;
@@ -68,6 +61,7 @@ class updateStaginArea():
         try:
             cur.executescript(query)
         except sqlite3.OperationalError:
+            # raise
             pass
         con.commit()
         cur.close()
