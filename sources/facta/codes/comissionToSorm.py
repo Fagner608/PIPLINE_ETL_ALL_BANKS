@@ -65,11 +65,20 @@ class comissionToStorm():
                 dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
                 dados['valor_cms_repasse'] = dados['valor_cms_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
                 dados['valor_bonus_repasse'] = dados['valor_bonus_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
-                cartao = dados[dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO")]
-                normal = dados[~dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO")]
+                
+                cartao = dados[dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO|Car|car")]
+                normal = dados[~dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO|Car|car")]
                 cartao.drop(['tipo_operacao'], axis = 1, inplace = True)
                 normal.drop(['tipo_operacao'], axis = 1, inplace = True)
                 cartao.columns = self.columns_to_rename
+                cartao.columns = ['#ADE#',	
+                                      '#VALOR_BASE#',	
+                                      '#VALOR_CMS_CARTAO#',	
+                                      '#VALOR_BONUS#',	
+                                      '#PRAZO#',	
+                                      '#DATA_DIGITACAO#',	
+                                      '#CODIGO_TABELA#',	
+                                      '#VALOR_BASE_BRUTO#']
                 normal.columns = self.columns_to_rename
                 os.makedirs(path_to_save, exist_ok=True)
                 if not cartao.empty:
@@ -78,4 +87,4 @@ class comissionToStorm():
                     normal.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
 
 # debug     
-# comissionToStorm().makeReport(date = datetime.date(2024, 8, 16), bank = 'FACTA FINANCEIRA')
+# comissionToStorm().makeReport(date = datetime.date.today(), bank = 'FACTA FINANCEIRA')

@@ -34,11 +34,12 @@ def CleaningContracts(date: datetime.date):
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
     if contracts is not None:
 
-        result = cleaningData().cleaning(dataFrame = contracts,
-                                                typeData = ['monetary'],
-                                                columns_convert = ['valorparcela',	'valorfinanciado',	'valoremprestimo'] # informe variaveis com valores monetarios, conforme exemplo
-                                                )
+        # result = cleaningData().cleaning(dataFrame = contracts,
+        #                                         typeData = ['monetary'],
+        #                                         columns_convert = ['valorparcela',	'valorfinanciado',	'valoremprestimo'] # informe variaveis com valores monetarios, conforme exemplo
+        #                                         )
 
+        result = contracts
         # metodo para limpeza de strings
         result = cleaningData().cleaning(dataFrame = result,
                                             typeData = ['string'],
@@ -46,8 +47,9 @@ def CleaningContracts(date: datetime.date):
                                                 )
 
         # metodo para transforacao dos valores monetarios
-        final_contracts = transformationData().convert_monetary(dataFrame = result,
-                                        columns_convert = ['valorparcela',	'valorfinanciado',	'valoremprestimo'])
+        # final_contracts = transformationData().convert_monetary(dataFrame = result,
+        #                                 columns_convert = ['valorparcela',	'valorfinanciado',	'valoremprestimo'])
+        final_contracts= result
         # Se necessario faca as demais alteracoes aqui
             #exemplo:
             ## Spiit no tipo_contrato (001 - Novo Contrato)
@@ -103,15 +105,15 @@ def load_contracts(date: datetime.date):
     
     total_dict[0]['valor_base'] = 'valoremprestimo'
     
-    total_dict[0]['percentual_cms_repasse'] = ''
+    total_dict[0]['percentual_cms_repasse'] = 'percentual_cms_repasse'
     
-    total_dict[0]['valor_cms_repasse'] = ''
+    total_dict[0]['valor_cms_repasse'] = 'valor_cms_repasse'
     
     total_dict[0]['percentual_bonus_repasse'] = ''
     
     total_dict[0]['valor_bonus_repasse'] = ''
     
-    total_dict[0]['data_pagamento_cliente'] = ''
+    total_dict[0]['data_pagamento_cliente'] = 'datacadastro'
     
     total_dict[0]['percentual_cms_a_vista'] = ''
     
@@ -149,5 +151,5 @@ def load_contracts(date: datetime.date):
     
 
 #Debug
-CleaningContracts(date=datetime.date.today())
-load_contracts(date=datetime.date.today())
+# CleaningContracts(date=datetime.date.today())
+# load_contracts(date=datetime.date.today())

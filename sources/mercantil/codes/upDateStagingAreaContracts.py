@@ -31,28 +31,28 @@ class updateStaginAreaContracts():
         alter table staging_area add column nome_operacao text;
         alter table staging_area add column sit_pagamento_cliente text;
         alter table staging_area add column cliente_id text;
-        alter table staging_area add column valor_cms_repasse real;
-        alter table staging_area add column percentual_cms_repasse real;
-        
+        alter table staging_area add column valor_cms_repasse float;
+        alter table staging_area add column percentual_cms_repasse float;
         
 
-        -- atualzando comissoes
-        UPDATE staging_area set percentual_cms_repasse = CASE
-            -- regras com TCC
-        WHEN
-            valoremprestimo > 0 and valoremprestimo <= 600 and valortarifatcc > 0 and codigoproduto in (13728077, 13728127, 13728128) THEN 0.16
-        WHEN
-            valoremprestimo > 600 and valoremprestimo <= 1200 and valortarifatcc > 0 and codigoproduto in (13728077, 13728127, 13728128) THEN 0.15
-        WHEN
-            valoremprestimo > 1200 and valortarifatcc > 0 and codigoproduto in (13728077, 13728127, 13728128) THEN 0.13
+        -- Atualizando percentual_cms_repasse
+        UPDATE staging_area
+        SET percentual_cms_repasse = CASE
+            -- Regras com TCC
+            WHEN valoremprestimo > 0 AND valoremprestimo <= 600 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 16
+            WHEN valoremprestimo > 600 AND valoremprestimo <= 1200 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 15
+            WHEN valoremprestimo > 1200 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 13
             
-            -- regras sem TCC
-        WHEN
-            valortarifatcc == 0 and codigoproduto in (13728077, 13728127, 13728128) THEN 0.13
-        WHEN
-            codigoproduto in (13728076, 13728078, 13728079) THEN 0.06
-
-
+            -- Regras sem TCC
+            WHEN valortarifatcc == 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 13
+            WHEN codigoproduto IN (13728076, 13728078, 13728079) THEN 6
+            
+            ELSE percentual_cms_repasse
+        END;
+            
+        -- Atualizando valor_cms_repasse
+        UPDATE staging_area 
+        set valor_cms_repasse = round((valoremprestimo * percentual_cms_repasse) / 100, 2);
 
         -- atualizando sit_pagamento_cliente
         UPDATE staging_area set sit_pagamento_cliente = 'PAGO';
@@ -87,8 +87,8 @@ class updateStaginAreaContracts():
         try:
             cur.executescript(query)
         except sqlite3.OperationalError:
-            raise
-            # pass
+            # raise
+            pass
         con.commit()
         cur.close()
         con.close()
