@@ -64,7 +64,7 @@ class comissionToStorm():
                 dados.columns = self.columns_to_rename
                 dados['#TIPO_COMISSAO#'] = "FLAT"
                 os.makedirs(path_to_save, exist_ok = True)
-                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
+                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';', encoding = 'latin1')
 
 # debug     
-# comissionToStorm().makeReport(date = datetime.date(2024, 8, 21), bank = 'V8 DIGITAL')
+# comissionToStorm().makeReport(date = datetime.date.today(), bank = 'V8 DIGITAL')

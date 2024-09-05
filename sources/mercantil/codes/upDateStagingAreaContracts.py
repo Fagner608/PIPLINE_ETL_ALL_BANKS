@@ -39,13 +39,22 @@ class updateStaginAreaContracts():
         UPDATE staging_area
         SET percentual_cms_repasse = CASE
             -- Regras com TCC
-            WHEN valoremprestimo > 0 AND valoremprestimo <= 600 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 16
-            WHEN valoremprestimo > 600 AND valoremprestimo <= 1200 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 15
+            WHEN valoremprestimo > 0 AND valoremprestimo <= 600 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 20
+            WHEN valoremprestimo > 600 AND valoremprestimo <= 1200 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 16
             WHEN valoremprestimo > 1200 AND valortarifatcc > 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 13
             
             -- Regras sem TCC
-            WHEN valortarifatcc == 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 13
+            WHEN valortarifatcc == 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 8
+
             WHEN codigoproduto IN (13728076, 13728078, 13728079) THEN 6
+
+            -- regra cartão
+            WHEN codigoproduto IN (13728071) AND quantidadeparcelas between 1 and 17 THEN 0
+            WHEN codigoproduto IN (13728071) AND quantidadeparcelas between 48 and 29 THEN 0.50
+            WHEN codigoproduto IN (13728071) AND quantidadeparcelas between 60 and 71 THEN 2.20
+            WHEN codigoproduto IN (13728071) AND quantidadeparcelas between 72 and 82 THEN 2.75
+            WHEN codigoproduto IN (13728071) AND quantidadeparcelas == 83 THEN 3.58
+            WHEN codigoproduto IN (13728071) AND quantidadeparcelas == 84 THEN 5.50
             
             ELSE percentual_cms_repasse
         END;

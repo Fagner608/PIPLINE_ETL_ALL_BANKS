@@ -68,4 +68,4 @@ class comissionToStorm():
                 dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
 
 # debug     
-# comissionToStorm().makeReport(date = datetime.date(2024, 6, 21), bank = 'BANCO CREFISA')
+# comissionToStorm().makeReport(date = datetime.date.today(), bank = 'BANCO CREFISA')

@@ -75,4 +75,4 @@ class productionToStorm():
                 dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';', decimal = ',')
 
 # debug     
-productionToStorm().makeReport(date = datetime.date.today(), bank = 'BANCO CREFISA')
+# productionToStorm().makeReport(date = datetime.date.today(), bank = 'BANCO CREFISA')

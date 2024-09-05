@@ -34,7 +34,9 @@ def sendAction(action: str, driver= None, element= None, key= None):
                 
 
 
-def move_file(date: datetime.date, type_transference: list = ['comission', 'production', 'importation', 'extra']):
+def move_file(date: datetime.date, 
+              type_transference: list = ['comission', 'production', 'importation', 'extra'],
+              iteraction = False):
 
         path_download_tmp = f"./download_tmp/"
         type_transfer = type_transference[0]

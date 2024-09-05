@@ -139,6 +139,6 @@ def load_contracts(date: datetime.date):
     
 
 #Debug
-crefisaCleaningContracts(date=datetime.date.today())
+# crefisaCleaningContracts(date=datetime.date.today())
 # load_contracts(date=datetime.date(2024, 6, 24))
 # print("finalizado")

@@ -165,7 +165,8 @@ class download():
         path_to_save = f'../download/{date_work.year}/{date_work.month}/comission/{date_work}.csv'
         
         # Realiza dowenload somente se o download não existir
-        if not path.exists(path_to_save):
+        # if not path.exists(path_to_save):
+        if True:
             try:
                 self.Comission(date_work=date_work)            
             except TimeoutException:
@@ -255,7 +256,8 @@ class download():
         path_to_save = f'../download/{date_work.year}/{date_work.month}/production/{date_work}.csv'
         
         # Realiza dowenload somente se o download não existir
-        if not path.exists(path_to_save):
+        # if not path.exists(path_to_save):
+        if True:
             try:
                 self.__production(date_work=date_work)            
             except TimeoutException:

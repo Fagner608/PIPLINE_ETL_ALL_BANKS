@@ -56,40 +56,21 @@ class download_importados_storm():
         WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'{path}'))).click()
         
         time.sleep(2)
-        if search('inicio', path):
-            calendar_year = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.bootstrap-datetimepicker-widget > div > div > table > thead > tr > th:nth-child(2)'))).text.upper()
-                                                                                                                
-            while date.strftime("%B %Y").upper() != calendar_year:
-                if int(calendar_year.split(" ")[1]) <= date.year:
+        calendar_year = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.bootstrap-datetimepicker-widget > div > div > table > thead > tr > th:nth-child(2)'))).text.upper()
+                                                                                                            
+        while date.strftime("%B %Y").upper() != calendar_year:
+            if int(calendar_year.split(" ")[1]) <= date.year:
+                if search('inicio', path):
                     self.__click_button_css_selector(path = 'div.bootstrap-datetimepicker-widget > div > div > table > thead > tr > th:nth-child(1)', name_button = 'Encontrar mês')
                     calendar_year = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.bootstrap-datetimepicker-widget > div > div > table > thead > tr > th:nth-child(2)'))).text.upper()
-                    time.sleep(1)
-            try:
-                elements = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.datepicker-days > table:nth-child(1)'))) 
-                elements = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.datepicker-days > table:nth-child(1)'))) 
-            except:
-                elements = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.bootstrap-datetimepicker-widget > div > div:nth-child(1)')))
+                time.sleep(1)
+                
 
-        if search('fim', path):
-            # Exemplo: Selecionar o elemento pelo texto
-            acess = True
-            count = 0
-            while acess:
-                time.sleep(2)
-                try:
-                    
-                    calendar_year = WebDriverWait(driver, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f"div.bootstrap-datetimepicker-widget:nth-child({count}) > div > div > table > thead > tr > th:nth-child(2)"))).text.upper()
-                    acess = False
-                except Exception:
-                    count += 1
-                    continue
-            while date.strftime("%B %Y").upper() != calendar_year:
-                if int(calendar_year.split(" ")[1]) <= date.year:
-                    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f"div.bootstrap-datetimepicker-widget:nth-child({count}) > div > div > table > thead > tr > th:nth-child(1)"))).click()
-                    calendar_year = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f"div.bootstrap-datetimepicker-widget:nth-child({count}) > div > div > table > thead > tr > th:nth-child(2)"))).text.upper()
-                    time.sleep(1)
-            elements = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f"div.bootstrap-datetimepicker-widget:nth-child({count}) > div:nth-child(1) > div:nth-child(1)"))) 
-          
+        try:
+            elements = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.datepicker-days > table:nth-child(1)'))) 
+        except:
+            elements = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.bootstrap-datetimepicker-widget > div > div:nth-child(1)')))
+
 
         calendar_element = elements.find_elements(By.CSS_SELECTOR, 'tbody')
                                                     
@@ -112,13 +93,17 @@ class download_importados_storm():
                                 return
                 else: continue
 
-    def calendar_manipulate(self, date_work: datetime.date):
+    def calendar_manipulate(self):
             locale.setlocale(locale.LC_ALL, 'pt_pt.UTF-8')
             
-            for tag in ["#data-picker-filtro-inicio > span:nth-child(2)", "#data-picker-filtro-fim > span:nth-child(2)"]:
-                        self.__calendar_handle(path = tag, date = date_work)
+            start_date = datetime.date.today() - datetime.timedelta(days = 30)
+            
+            
+            print(start_date)
+            self.__calendar_handle(path = '#data-picker-filtro-inicio > span:nth-child(2)', date = start_date)
 
-    def __importation(self, bank: str, date_work: datetime.date):
+
+    def __importation(self, bank: str):
                 
             '''
                 Download dos dados numa janela de D-20 até D+1
@@ -147,7 +132,7 @@ class download_importados_storm():
             WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#filtroBanco'))).click()
             time.sleep(1)
             WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, f"//option[contains(text(), '{bank.upper()}')]"))).click()
-            self.calendar_manipulate(date_work = date_work)
+            self.calendar_manipulate()
             WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ed-form-indicadores-submit'))).click()#ed-form-indicadores-submit
             time.sleep(1)
             WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ed-form-indicadores-unificado'))).click()#ed-form-indicadores-unificado
@@ -166,13 +151,13 @@ class download_importados_storm():
         '''
 
         path_to_save = f'../download/{date_work.year}/{date_work.month}/importation/{date_work}.csv'
-        self.__importation(date_work = date_work, bank=bank)  
+        self.__importation(bank=bank)  
         move_file(date= date_work, type_transference= ['importation'])
 
 
-    def tqdm_bar(self, bank: str, date_work: datetime.date):
+    def tqdm_bar(self, bank: str, date = datetime.date):
 
-        processos = [("Download do relatório de importacao do V8 - cartão", self.dowloadImportation)]
+        processos = [("Download do relatório de importacao do crefisa", self.dowloadImportation)]
 
 
         with tqdm(total=len(processos), desc="Executando processos") as pbar_total:
@@ -180,12 +165,12 @@ class download_importados_storm():
                 
                 pbar_total.set_description(processo_desc)
                 try:
-                    processo_func(date_work = date_work, bank = bank)
+                    processo_func(date_work = date, bank = bank)
                 except Exception as exc:
                     raise(exc)
                     
                 pbar_total.update(1)
 
 # Debug
-# date = datetime.date(2024, 8, 30)
-# download_importados_storm().tqdm_bar(bank = 'V8 DIGITAL', date_work = date)
+# date = datetime.date(2024, 6, 5)
+# download_importados_storm().tqdm_bar(date_work = date, bank = 'crefisa')

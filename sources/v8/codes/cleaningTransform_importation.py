@@ -9,44 +9,45 @@ import sqlite3
 import re
 
 
-def cleaningImportation(bank: str, date = datetime.date):
+def cleaningImportation(bank: str, date_work = datetime.date):
 
     # Trabalhando na tabela de produção
-    production = read_downaload().read_data(
-                    bank='v8',
-                    date = date,
-                    type_transference = ['importation'],
-                    engine = ['csv'],
-                    decimal = ',',
-                    thousands = '.',
-                    header = 0,
-                    encoding = 'latin-1'
-                )
-    if production is not None:
-        result = production
-        result['ADE'] = result['ADE'].apply(lambda x: str(x)[:12])
-        result = result[['Banco', 'Nome Arquivo', 'ADE']]
+    try:
+        production = read_downaload().read_data(
+                        bank='v8',
+                        date = date_work,
+                        type_transference = ['importation'],
+                        engine = ['csv'],
+                        decimal = ',',
+                        thousands = '.',
+                        header = 0,
+                        encoding = 'latin-1'
+                    )
+        if production is not None:
+            result = production
+            result['ADE'] = result['ADE'].apply(lambda x: str(x)[:12])
+            result = result[['Banco', 'Nome Arquivo', 'ADE']]
+            
+            
+            result = cleaningData().cleaning(dataFrame = result,
+                                                typeData = ['string'],
+                                                columns_convert =['banco', 'ade'])
+
+            
+            # Spiit no tipo_contrato (001 - Novo Contrato)
+            # OBS: Ainda não estou usando a data da importação
+            # result['data_importacao'] = result['nome_arquivo'].map(lambda x: (re.findall('\d{1,2}-\d{1,2}-\d{4}', x) or re.findall('\d{1,2}-\d{1,2}', x))[0])
+            # result.drop(['nome_arquivo'], axis = 1, inplace=True)
+            # result['data_importacao'] = result['data_importacao'].apply(lambda x: datetime.datetime.strptime(x, '%d-%m-%Y'))
+            saveStageArea().inputTable(table = result)
         
-        
-        result = cleaningData().cleaning(dataFrame = result,
-                                            typeData = ['string'],
-                                            columns_convert =['banco', 'ade'])
-
-        
-        # Spiit no tipo_contrato (001 - Novo Contrato)
-        # OBS: Ainda não estou usando a data da importação
-        # result['data_importacao'] = result['nome_arquivo'].map(lambda x: (re.findall('\d{1,2}-\d{1,2}-\d{4}', x) or re.findall('\d{1,2}-\d{1,2}', x))[0])
-        # result.drop(['nome_arquivo'], axis = 1, inplace=True)
-        # result['data_importacao'] = result['data_importacao'].apply(lambda x: datetime.datetime.strptime(x, '%d-%m-%Y'))
-        saveStageArea().inputTable(table = result)
-        
+    except Exception as e:
+        print(f"Arquivo de importação vazio: {type(e).__name__}")
 
 
 
 
-
-
-def statusManager(bank:str, date: datetime.date):
+def statusManager(bank:str, date_work: datetime.date):
     
     con, cur = inputsDB().conDatabase()
 
@@ -65,5 +66,5 @@ def statusManager(bank:str, date: datetime.date):
     con.close()
 
 #Debug
-cleaningImportation('v8', date = datetime.date.today())
-statusManager('v8', date = datetime.date.today())
+# cleaningImportation('v8', date = datetime.date.today())
+# statusManager('v8', date = datetime.date.today())

@@ -70,8 +70,10 @@ class comissionToStorm():
                     cartao['#TIPO_COMISSAO#'] = 'FLAT'
                     cartao.drop(['#DATA_DIGITACAO#'], axis = 1, inplace = True)
                     cartao.columns = ['#ADE#', '#VALOR_BASE#',	'#VALOR_CMS_CARTAO#', '#PRAZO#', '#CODIGO_TABELA#', '#VALOR_BASE_BRUTO#', '#TIPO_COMISSAO#']
+                    cartao['#PREV_CMS_DIFERIDA#'] = ""
                     cartao.to_csv(path_to_save + f'CARTAO {bank}_{date}.csv', index = False, sep = ';')
                 if not normal.empty:
+                    normal['#PREV_CMS_DIFERIDA#'] = ""
                     normal.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
 
 

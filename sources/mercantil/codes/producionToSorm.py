@@ -7,7 +7,8 @@ import datetime
 import sys
 sys.path.append("../../modules")
 from relatoriosNaoImportados import relatoriosNaoImportados
-
+import locale
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 class productionToStorm():
       
         def __init__(self):
@@ -65,9 +66,15 @@ class productionToStorm():
             if dados is not None:
     
                 dados = dados[self.columns_select]
+                dados['valor_liquido'] = dados['valor_liquido'].map(lambda x: locale.currency(x, symbol=False, grouping=True))
+                dados['valor_parcela'] = dados['valor_parcela'].map(lambda x: locale.currency(x, symbol=False, grouping=True))
+
                 # dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
                 dados.columns = self.columns_to_rename
-                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';', encoding = 'utf8')
+                
+                import os
+                os.makedirs(path_to_save, exist_ok=True)
+                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';', encoding = 'latin1')
 
 # debug     
 # productionToStorm().makeReport(date = datetime.date.today(), bank = 'BANCO MERCANTIL DO BRASIL')

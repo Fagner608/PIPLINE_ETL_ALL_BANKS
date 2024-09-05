@@ -144,7 +144,8 @@ class download():
         '''
 
         path_to_save = f'../download/{date_work.year}/{date_work.month}/production/{date_work}.csv'
-        if not path.exists(path_to_save):
+        # if not path.exists(path_to_save):
+        if True:
             try:
                 # Realiza dowenload somente se o download não existir
                 self.__production(date_work=date_work)            

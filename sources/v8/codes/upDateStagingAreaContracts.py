@@ -86,8 +86,8 @@ class updateStaginAreaContracts():
         try:
             cur.executescript(query)
         except sqlite3.OperationalError:
-            raise
-            # pass
+            # raise
+            pass
         con.commit()
         cur.close()
         con.close()
