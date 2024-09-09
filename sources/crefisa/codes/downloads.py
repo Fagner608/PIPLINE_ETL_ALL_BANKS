@@ -3,7 +3,7 @@ from os import makedirs, path, remove, listdir
 import sys
 
 sys.path.append("../../modules")
-from login import login
+from login_code import login
 from sendActions import move_file
 
 from dotenv import dotenv_values
@@ -131,6 +131,7 @@ class download():
 
                 except NoAlertPresentException:
                     pass
+                driver.close()
         
 
     def dowloadProductiion(self, date_work: datetime.date):

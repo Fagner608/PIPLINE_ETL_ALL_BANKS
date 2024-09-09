@@ -50,6 +50,7 @@ class updateStaginAreaContracts():
         WHEN codigo_orgao in ('202290') then 'INSS'
         WHEN codigo_orgao in ('202284') then 'INSS - CARTÃO BENEFÍCIO'
         WHEN codigo_orgao in ('202329 ') then 'FEDERAL - CARTÃO BENEFÍCIO'
+        WHEN codigo_orgao in ('000001 ') then 'FEDERAL'
         else descr_tabela
         end;
 

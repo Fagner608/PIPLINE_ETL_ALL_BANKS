@@ -4,7 +4,7 @@ import sys
 
 
 sys.path.append("../../modules")
-from login import login
+from login_code import login
 from sendActions import move_file
 
 
@@ -139,6 +139,7 @@ class download_importados_storm():
             
             ################ fim do seu seu codigo ################
             time.sleep(6)
+            driver.close()
 
     def dowloadImportation(self, date_work: datetime.date, bank: str):
 
