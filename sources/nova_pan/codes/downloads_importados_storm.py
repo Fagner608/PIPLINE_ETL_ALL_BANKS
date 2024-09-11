@@ -116,8 +116,9 @@ class download_importados_storm():
             # Entrando na página de comissões
             ################ inicio do seu seu codigo ################
             try:
-                time.sleep(1)
-                WebDriverWait(driver, 20).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+                time.sleep(10)
+                WebDriverWait(driver, 100).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+                time.sleep(10)
                 butoon = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.st-item:nth-child(12) > a:nth-child(1) > div:nth-child(1) > span:nth-child(2)')))
                 time.sleep(1)
                 driver.execute_script("arguments[0].click();", butoon)
@@ -162,7 +163,7 @@ class download_importados_storm():
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ed-form-indicadores-submit'))).click()#ed-form-indicadores-submit
                 time.sleep(1)
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ed-form-indicadores-unificado'))).click()#ed-form-indicadores-unificado
-
+                time.sleep(6)
 
     def dowloadImportation(self, date_work: datetime.date, bank: str):
 

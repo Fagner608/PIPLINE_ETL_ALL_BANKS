@@ -21,4 +21,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-        
+    print("Processos do V8 - cartão finalizados.")

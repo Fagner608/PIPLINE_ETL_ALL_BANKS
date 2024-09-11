@@ -115,8 +115,9 @@ class download_importados_storm():
             driver = self.driver
             # Entrando na página de comissões
             ################ inicio do seu seu codigo ################
-            time.sleep(1)
-            WebDriverWait(driver, 20).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+            time.sleep(10)
+            WebDriverWait(driver, 100).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+            time.sleep(10)
             butoon = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.st-item:nth-child(12) > a:nth-child(1) > div:nth-child(1) > span:nth-child(2)')))
             time.sleep(1)
             driver.execute_script("arguments[0].click();", butoon)

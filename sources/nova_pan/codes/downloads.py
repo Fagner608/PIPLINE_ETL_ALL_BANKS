@@ -139,6 +139,7 @@ class download():
             time.sleep(1)
             driver.execute_script("arguments[0].click();", button)
             time.sleep(2)
+            driver.close()
             
         
         ########################## Fim do codigo de extracao ##########################|
@@ -274,8 +275,7 @@ class download():
 
 
         processos = [
-                ("Download do relatório de comissão crefisa", self.dowloadComission),
-                #    ("Download do relatório de produção do crefisa", self.dowloadProductiion)
+                ("Download do relatório de comissão Nova-Pan", self.dowloadComission),
                 ]
         
         with tqdm(total=len(processos), desc="Executando processos") as pbar_total:

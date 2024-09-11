@@ -50,7 +50,8 @@ def main():
         "V8 - CARTAO": "executa_v8 - Atalho.lnk",
         "FACTA": "executa_facta - Atalho.lnk",
         "CREFISA": "executar_crefisa - Atalho.lnk",
-        "PAN": "executar_nova_pan - Atalho",
+        "PAN": "executar_nova_pan - Atalho.lnk",
+        "MERCANTIL": "executar_main_mercantil - Atalho.lnk",
     }
 
     # Sidebar com os filtros
@@ -91,11 +92,12 @@ def main():
 
         # Botões para abrir diretórios
         if st.button("Comissão"):
-            open_directory(r"\\Serv-agil\agil franquias$\FINANCEIRO\11 - RELATÓRIOS DIÁRIOS E MENSAIS\01 - Importações Diárias\Importações\Fagner - NAO USAR\Comissão")
+            print(os.getcwd())
+            open_directory(r"Y:\FINANCEIRO\11 - RELATÓRIOS DIÁRIOS E MENSAIS\01 - Importações Diárias\Importações\Fagner - NAO USAR\Comissão")
             st.sidebar.success("Abrindo diretório de Comissão...")
 
         if st.button("Produção"):
-            open_directory(r"\\Serv-agil\agil franquias$\FINANCEIRO\11 - RELATÓRIOS DIÁRIOS E MENSAIS\01 - Importações Diárias\Importações\Fagner - NAO USAR\Produção")
+            open_directory(r"Y:\FINANCEIRO\11 - RELATÓRIOS DIÁRIOS E MENSAIS\01 - Importações Diárias\Importações\Fagner - NAO USAR\Produção")
             st.sidebar.success("Abrindo diretório de Produção...")
 
         # Linha separadora para a seção de filtros de contratos
