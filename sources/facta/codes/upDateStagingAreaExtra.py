@@ -19,19 +19,19 @@ class updateStaginAreaExtra():
 
                 contaCorrente = contaCorrente
                 proposta = proposta
-                retorno = contaCorrente[(contaCorrente.codigoaf == proposta) & (contaCorrente.tipocontacorretor == 54)]['credito'].values
+                retorno = contaCorrente[(contaCorrente.CODIGOAF == proposta) & (contaCorrente.TIPOCONTACORRETOR == 54)]['CREDITO'].values
                 if flat:
-                    retorno = contaCorrente[(contaCorrente.codigoaf == proposta) & (contaCorrente.tipocontacorretor == 1)]['credito'].values
+                    retorno = contaCorrente[(contaCorrente.CODIGOAF == proposta) & (contaCorrente.TIPOCONTACORRETOR == 1)]['CREDITO'].values
                 if len(retorno) > 1:
                     teste = float()
                     for item in retorno:
-                        item = float(item.replace(".", "").replace(",", "."))
+                        # item = float(item.replace(".", "").replace(",", "."))
                         teste = teste + item
                         retorno = '{0:.2f}'.format(teste)
                 else:
                     try:
                         retorno  = retorno[0]
-                        retorno = retorno.replace(".", "").replace(",", ".")
+                        # retorno = float(str(retorno).replace(".", "").replace(",", "."))
                     except IndexError:
                         retorno = 0.00
                 return retorno

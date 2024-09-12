@@ -81,7 +81,7 @@ class download():
 
 
 
-    def dowloadComission(self, date_work: datetime.date):
+    def __Comission(self, date_work: datetime.date):
 
         '''
 
@@ -120,14 +120,14 @@ class download():
             driver.find_element(By.XPATH,"//*[contains(@class, 'ant-calendar-picker-container')]").find_elements(By.XPATH, "//input[@placeholder='Data de início']")[3].send_keys(date_ini.strftime("%d/%m/%Y"))
             time.sleep(0.5)
             
-            driver.find_elements(By.CLASS_NAME,"ant-calendar-table")[0].find_element(By.XPATH,"//div[text()='{}']".format(int(date_work.strftime("%d")))).click()
+            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class, 'ant-calendar-range-part') and contains(@class, 'ant-calendar-range-right')]//div[text()='{int(date_work.strftime('%d'))}']"))).click()
 
             driver.find_element(By.XPATH,"//button[contains(@class, 'ant-btn-primary')]//*[contains(., 'Visualizar')]/..").click()
 
             try:
                 if WebDriverWait(driver,timeout=10).until(EC.visibility_of_element_located((By.XPATH,"//div[contains(text(), 'Não foram encontrados registros.')]"))).is_displayed():
                     print("Sem registros!")
-                    sys.exit()
+                    return
             except:
                 pass
 
@@ -162,14 +162,18 @@ class download():
             driver.find_element(By.XPATH,"//*[contains(@class, 'ant-calendar-picker-container')]").find_elements(By.XPATH, "//input[@placeholder='Data de início']")[3].send_keys(date_ini.strftime("%d/%m/%Y"))
             time.sleep(0.5)
             
-            driver.find_elements(By.CLASS_NAME,"ant-calendar-table")[0].find_element(By.XPATH,"//div[text()='{}']".format(int(date_work.strftime("%d")))).click()
+            # driver.find_element(By.CLASS_NAME,"ant-calendar-range-part ant-calendar-range-right").find_element(By.CLASS_NAME, 'ant-calendar-body').find_element(By.XPATH,"//div[text()='{}']".format(int(date_work.strftime("%d")))).click()
+
+            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class, 'ant-calendar-range-part') and contains(@class, 'ant-calendar-range-right')]//div[text()='{int(date_work.strftime('%d'))}']"))).click()
+
+            # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.ant-calendar-today'))).send_keys(date_work.strftime("%d/%m/%Y"))
 
             driver.find_element(By.XPATH,"//button[contains(@class, 'ant-btn-primary')]//*[contains(., 'Visualizar')]/..").click()
 
             try:
                 if WebDriverWait(driver,timeout=10).until(EC.visibility_of_element_located((By.XPATH,"//div[contains(text(), 'Não foram encontrados registros.')]"))).is_displayed():
                     print("Sem registros!")
-                    sys.exit()
+                    return
             except:
                 pass
 
@@ -180,96 +184,29 @@ class download():
 
             time.sleep(5)
             WebDriverWait(element,timeout=30).until(EC.element_to_be_clickable((By.XPATH,"//button[contains(@class, 'ant-btn ant-btn-dashed')]//*[contains(., 'Download XLSX')]/.."))).click()
+
+            time.sleep(6)
+
+
+
+    def dowloadComission(self, date_work: datetime.date):
+
+        '''
+
+            Executa a classe self.__comission() e faz a transferencia do download para a pasta download correta.
+
+        '''
+
+        path_to_save = f'../download/{date_work.year}/{date_work.month}/comission/{date_work}.csv'
         
-            
-        time.sleep(6)
+        # Realiza dowenload somente se o download não existir
+        try:
+                self.__Comission(date_work=date_work)            
+        except TimeoutException:
+                self.__Comission(date_work=date_work)
 
-    # def __production(self, date_work: datetime.date):
-                
-    #             '''
-
-    #                 Classe para fazer o downlod do relatório de producao.
-                    
-    #                 ### date_work: informado no modulo main.py, quando chama a modulo main_download.py
-
-    #             '''
-                
-
-    #             for i in listdir("./download_tmp/"):
-    #                 remove(f"./download_tmp/{i}")
-    #             driver = self.driver
-    #             date_2 = date_work - datetime.timedelta(days = 7)
-    #             # Entrando na página de comissões
-    #             ########################## Inicie aqui o codigo de extracao ##########################|
-
-    #             # Exemplo
-
-    #             # try:
-    #             #     button = WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu4')))
-    #             #     driver.execute_script('arguments[0].click();', button)
-    #             #     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu4 > li:nth-child(2) > a:nth-child(1)'))).click()
-    #             # except TimeoutException:
-    #             #     WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu4'))).click()
-    #             #     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu4 > li:nth-child(2) > a:nth-child(1)'))).click()
-                    
-                
-
-    #             # try:
-    #             #     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtAutenticacaoSenhaFinanceira'))).send_keys(self.credentials['USER_AUTHENTICATION'])
-    #             #     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'button.btn:nth-child(2)'))).click()
-    #             #     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.swal2-confirm'))).click()
-    #             # except TimeoutException:
-    #             #     pass            
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtDataInicial'))).clear()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtDataInicial'))).click()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtDataInicial'))).send_keys(date_2.strftime("%d/%m/%Y"))
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtDataFinal'))).clear()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtDataFinal'))).click()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtDataFinal'))).send_keys(datetime.date.today().strftime("%d/%m/%Y"))
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlTipoResultado'))).click()
-
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlTipoDeData > option:nth-child(1)'))).click()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlTipoDeData > option:nth-child(1)'))).click()
-
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlStatusPagCliente > option:nth-child(3)'))).click()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlStatusPagCliente > option:nth-child(3)'))).click()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlTipoResultado > option:nth-child(1)'))).click()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlTipoResultado > option:nth-child(1)'))).click()
-    #             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#btn'))).click()
-                
-    #             # try:
-    #             #     allert = driver.switch_to.alert
-    #             #     driver_alert = allert.text
-
-    #             #     if driver_alert == 'NENHUM RESULTADO FOI ENCONTRADO.':
-    #             #         allert.dismiss()
-    #             #         # Salvando arquivo vazio
-
-    #             # except NoAlertPresentException:
-    #             #     pass
-        
-    #             ########################## Fim do codigo de extracao ##########################|
-
-
-    # def dowloadProductiion(self, date_work: datetime.date):
-
-    #     '''
-
-    #         Executa a classe self.__production() e faz a transferencia do download para a pasta download correta.
-
-    #     '''
-
-    #     path_to_save = f'../download/{date_work.year}/{date_work.month}/production/{date_work}.csv'
-        
-    #     # Realiza dowenload somente se o download não existir
-    #     if not path.exists(path_to_save):
-    #         try:
-    #             self.__production(date_work=date_work)            
-    #         except TimeoutException:
-    #             self.__production(date_work=date_work)
-
-    #         # move o arquivo para a pasta correta            
-    #         move_file(date= date_work, type_transference= ['production'])
+            # move o arquivo para a pasta correta            
+        move_file(date= date_work, type_transference= ['comission'])
 
     def tqdm_bar(self, date_work = datetime.date):
         '''
@@ -294,4 +231,4 @@ class download():
                 pbar_total.update(1)
 
 # Debug - exemplo de chamaa do modulo
-download().tqdm_bar(date_work = datetime.date.today())
+# download().tqdm_bar(date_work = datetime.date.today())

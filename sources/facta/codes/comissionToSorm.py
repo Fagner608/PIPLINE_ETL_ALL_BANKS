@@ -85,6 +85,6 @@ class comissionToStorm():
                     cartao.to_csv(path_to_save + f'CARTAO {bank}_{date}.csv', index = False, sep = ';')
                 if not normal.empty:
                     normal.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
-
+# 
 # debug     
 # comissionToStorm().makeReport(date = datetime.date.today(), bank = 'FACTA FINANCEIRA')

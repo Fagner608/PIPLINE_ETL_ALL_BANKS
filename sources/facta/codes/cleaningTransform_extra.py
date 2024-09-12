@@ -27,8 +27,8 @@ def CleaningExtra(date: datetime.date):
                                         date = date,
                                         type_transference = ['extra'],
                                         engine = ['excel'], # informe o engine para leitura
-                                        decimal = ',',
-                                        thousands = '.',
+                                        decimal = '.',
+                                        thousands = ',',
                                         sheet_name = 'data',
                                         # parse_dates=['DATA_REGISTRO', 'DATA_PAGAMENTO_CLIENTE', 'DATAEFETIVACAO'],
                                         # format_parse_dates='%d/%m/%Y',
@@ -41,18 +41,21 @@ def CleaningExtra(date: datetime.date):
     if extra is not None:
         
         # metodo para limpeza de valores monetarios
-        result = cleaningData().cleaning(dataFrame = extra,
-                                                typeData = ['monetary'],
-                                                columns_convert = ['credito'] # informe variaveis com valores monetarios, conforme exemplo
-                                                )
+        # result = cleaningData().cleaning(dataFrame = extra,
+        #                                         typeData = ['monetary'],
+        #                                         columns_convert = ['credito'] # informe variaveis com valores monetarios, conforme exemplo
+        #                                         )
 
         
-        # metodo para transforacao dos valores monetarios
-        final_production = transformationData().convert_monetary(dataFrame = result,
-                                        columns_convert = ['credito'])
+        # # metodo para transforacao dos valores monetarios
+        # final_production = transformationData().convert_monetary(dataFrame = result,
+        #                                 columns_convert = ['credito'])
 
+        final_production = extra
 
-        final_production = final_production[final_production['tipocontacorretor'].isin([1, 54])][['codigoaf', 'credito', 'tipocontacorretor']]
+        print(final_production[['CODIGOAF', 'CREDITO', 'TIPOCONTACORRETOR']])
+        # final_production = final_production[final_production['tipocontacorretor'].isin([1, 54])][['codigoaf', 'credito', 'tipocontacorretor']]
+        final_production = final_production[final_production['TIPOCONTACORRETOR'].isin([1, 54])][['CODIGOAF', 'CREDITO', 'TIPOCONTACORRETOR']]
         
         updateStaginAreaExtra().upDatating(contaCorrente = final_production)
         
