@@ -6,7 +6,7 @@ sys.path.append("../../modules")
 from readDownload import read_downaload
 from cleaningTransformaData import cleaningData, transformationData, saveStageArea
 from inputDataTransformed import inputsDB
-
+from upDateStagingAreaComission import updateStaginArea
 import datetime
 
 
@@ -23,48 +23,28 @@ def CleaningComission(date: datetime.date):
 
     ## Carga da tabela de comissão
     comission = read_downaload().read_data(
-                        bank='crefisa', # informe o nome do banco conforme esta no diretorio criado
+                        bank='banrisul', # informe o nome do banco conforme esta no diretorio criado
                         date = date,
                         type_transference = ['comission'],
-                        engine = ['csv'], # informe o engine para leitura
+                        engine = ['excel'], # informe o engine para leitura
                         decimal = ',',
                         thousands = '.',
-                        parse_dates=['PG Cliente'],
-                        format_parse_dates='%d/%m/%Y',
+                        sheet_name=1,
                         header = 0
                     )
 
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
     if comission is not None:
         result = comission
-
         # metodo para limpeza de valores monetarios
         result = cleaningData().cleaning(dataFrame = result,
                                         typeData = ['monetary'],
-                                        columns_convert = ['valor_base', 'r$_à_vista', 'r$_bônus'] # informe variaveis com valores monetarios, conforme exemplo
+                                        columns_convert = ['pmt',	'valor_operacao',	'valor_base', 'valor_comissao'] # informe variaveis com valores monetarios, conforme exemplo
                                         )
-
-
-        # metodo para limpeza de strings
-        result = cleaningData().cleaning(dataFrame = result,
-                                            typeData = ['string'],
-                                        
-                                        columns_convert =['físico',
-                                                        'pendência',
-                                                        'contrato_id',
-                                                        'nº_proposta',
-                                                        'cpf_cliente',
-                                                        'banco',
-                                                        'tipo_contrato',
-                                                        '%_à_vista',
-                                                        '%_bônus',
-                                                        'usuário_dig_banco'
-                                                        ] # informe variaveis que contenham as strings que deseja limpar (Não insira atributos que contenham: nome de cliente, Id de contrato ou proposta, número de contrato ou proposta, datas SE estes campos precisarem manter o valor original)
-                                                )
 
         # metodo para transforacao dos valores monetarios
         final_comission = transformationData().convert_monetary(dataFrame = result,
-                                    columns_convert = ['valor_base', 'r$_à_vista', 'r$_bônus'] # informe variaveis com valores monetarios, conforme exemplo
+                                    columns_convert = ['pmt',	'valor_operacao',	'valor_base', 'valor_comissao'] # informe variaveis com valores monetarios, conforme exemplo
                                     )
 
 
@@ -88,6 +68,8 @@ def load_comission(date: datetime.date):
 
     '''
 
+    # Atualizando valores na tabela staging_area
+    updateStaginArea().upDatating(bank='BANCO BANRISUL')
 
     #lista para consultar os atributos das tabelas
     list_tables = [
@@ -108,14 +90,14 @@ def load_comission(date: datetime.date):
 
     # preencher os atributos com o correspondente da tabela carregada no staging_area
     #Tabela tipo_contrato (ex: novo, margem_livre, etc - como vier na fonte)
-    total_dict[0]['tipo'] = 'tipo_contrato'
+    total_dict[0]['tipo'] = 'tipo_operacao'
 
     # tabela tipo_operacao (ex: )
-    total_dict[1]['nome_operacao'] = ''
+    total_dict[1]['nome_operacao'] = 'tipo_operacao'
 
     # Tabela cliente
-    total_dict[2]['nome_cliente'] = ''
-    total_dict[2]['cpf_cliente'] = ''
+    total_dict[2]['nome_cliente'] = 'nome'
+    total_dict[2]['cpf_cliente'] = 'cpf'
 
     # Tabela vendedor (exemplo: The One - como vier na fonte)
     total_dict[3]['nome_vendedor'] = ''
@@ -126,18 +108,18 @@ def load_comission(date: datetime.date):
     total_dict[4]['codigo_usuario_substabelecido'] = ''
 
     # Tabela convenio (exemplo: Baixa Renda - como vier na fonte)
-    total_dict[5]['nome_convenio'] = ''
+    total_dict[5]['nome_convenio'] = 'conveniada'
     total_dict[5]['codigo_convenio'] = ''
 
     # Tabela usuario_digitador_banco
-    total_dict[6]['nome_usuario_digitador'] = ''
-    total_dict[6]['codigo_usuario_digitador'] = ''
+    total_dict[6]['nome_usuario_digitador'] = 'nome_agente'
+    total_dict[6]['codigo_usuario_digitador'] = 'login_agente'
 
     # Tabela banco
-    total_dict[7]['nome_banco'] = ''
+    total_dict[7]['nome_banco'] = 'banco'
 
     # Tabela tabela
-    total_dict[8]['nome_tabela'] = ''
+    total_dict[8]['nome_tabela'] = 'plano'
     total_dict[8]['codigo_tabela'] = ''
 
     # metodo que fara o input dos dados
@@ -146,5 +128,5 @@ def load_comission(date: datetime.date):
     
 
 # Debug
-# CleaningComission(date=datetime.date(2024,5,24))
-# load_comission(date=datetime.date(2024,5,24))
+# CleaningComission(date=datetime.date.today())
+# load_comission(date=datetime.date.today())

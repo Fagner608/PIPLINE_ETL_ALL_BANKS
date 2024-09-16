@@ -52,6 +52,7 @@ def main():
         "CREFISA": "executar_crefisa - Atalho.lnk",
         "PAN": "executar_nova_pan - Atalho.lnk",
         "MERCANTIL": "executar_main_mercantil - Atalho.lnk",
+        "BANRISUL": "executar_banrisul - Atalho.lnk",
     }
 
     # Sidebar com os filtros

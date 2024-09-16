@@ -26,40 +26,40 @@ class updateStaginAreaContracts():
         # exemlo
         query = f'''
 
+        -- inserindo atributos faltantes
+        alter table staging_area add column banco text;
+        alter table staging_area add column sit_pagamento_cliente text;
+        alter table staging_area add column vendedor text;
+
+        -- Atualizando vendedor
         update staging_area
-        set sit_pagamento_cliente = 'PAGO'
-        where sit_pagamento_cliente = 'pago_ao_cliente';
+        set vendedor = 'the_one_prestacao_de_servicos_ltda';
+        
+
+        -- Atualizando sit_pagamento_cliente
+        update staging_area
+        set sit_pagamento_cliente = 'PAGO';
 
         -- atualizando banco
         update staging_area
-        set banco = '{bank}'
-        where banco = 'crefisa'; -- ajuste o banco, para string que a tabela staging_area esta retornando
+        set banco = '{bank}'; -- ajuste o banco, para string que a tabela staging_area esta retornando
         
-        -- atualizando convenio
-        update staging_area
-        set convenio = 'CRÉDITO PESSOAL'
-        where convenio = 'baixa_renda';
+        -- atualizando convenio/tipo_operacao
+        update staging_area set tipo_operacao = CASE
+        WHEN tipo_operacao IN ('NOVO') THEN 'MARGEM LIVRE (NOVO)'
+        WHEN tipo_operacao IN ('REFIN', 'REFIN PORTABILIDADE ESPECIAL') THEN 'REFINANCIAMENTO DA PORTABILIDADE'
+        WHEN tipo_operacao IN ('PORTABILIDADE', 'PORTABILIDADE ESPECIAL') THEN 'PORTABILIDADE'
+        else tipo_operacao
+        end;
         
-        update staging_area
-        set convenio = 'CRÉDITO PESSOAL'
-        where convenio = 'inss';
-        
-        -- atualizando tipo de contrato/opercao
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'novo_contrato';
-        
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'antecipacao_1_parcela';
-        
-        update staging_area
-        set tipo_contrato = 'MARGEM LIVRE (NOVO)'
-        where tipo_contrato = 'antecipacao_1_parcela';
-        
-        update staging_area
-        set tipo_contrato = 'REFINANCIAMENTO'
-        where tipo_contrato = 'refinanciamento';
+
+        -- atualizando orgao/conveniada
+        update staging_area set conveniada = CASE
+        WHEN conveniada IN ('SIAPE') THEN 'FEDERAL'
+        WHEN conveniada IN ('INSS DATAPREV') THEN 'INSS'
+        else conveniada
+        end;
+
 
         -- Atualizando cliente id
         alter table staging_area add column cliente_id text;
@@ -67,12 +67,11 @@ class updateStaginAreaContracts():
         set cliente_id = cliente.cliente_id
         from cliente
         where staging_area.cpf == cliente.cpf_cliente
-
-
         '''
         try:
             cur.executescript(query)
         except sqlite3.OperationalError:
+            # raise
             pass
         con.commit()
         cur.close()

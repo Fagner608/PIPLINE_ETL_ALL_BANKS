@@ -27,8 +27,8 @@ def CleaningExtra(date: datetime.date):
                                         date = date,
                                         type_transference = ['extra'],
                                         engine = ['excel'], # informe o engine para leitura
-                                        decimal = '.',
-                                        thousands = ',',
+                                        decimal = ',',
+                                        thousands = '.',
                                         sheet_name = 'data',
                                         # parse_dates=['DATA_REGISTRO', 'DATA_PAGAMENTO_CLIENTE', 'DATAEFETIVACAO'],
                                         # format_parse_dates='%d/%m/%Y',
@@ -53,7 +53,6 @@ def CleaningExtra(date: datetime.date):
 
         final_production = extra
 
-        print(final_production[['CODIGOAF', 'CREDITO', 'TIPOCONTACORRETOR']])
         # final_production = final_production[final_production['tipocontacorretor'].isin([1, 54])][['codigoaf', 'credito', 'tipocontacorretor']]
         final_production = final_production[final_production['TIPOCONTACORRETOR'].isin([1, 54])][['CODIGOAF', 'CREDITO', 'TIPOCONTACORRETOR']]
         

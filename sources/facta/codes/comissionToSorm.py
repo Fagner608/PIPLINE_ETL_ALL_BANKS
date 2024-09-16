@@ -82,9 +82,9 @@ class comissionToStorm():
                 normal.columns = self.columns_to_rename
                 os.makedirs(path_to_save, exist_ok=True)
                 if not cartao.empty:
-                    cartao.to_csv(path_to_save + f'CARTAO {bank}_{date}.csv', index = False, sep = ';')
+                    cartao.to_csv(path_to_save + f'CARTAO {bank}_{date}.csv', index = False, sep = ';', encoding = 'latin1')
                 if not normal.empty:
-                    normal.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';')
+                    normal.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';', encoding = 'latin1')
 # 
 # debug     
 # comissionToStorm().makeReport(date = datetime.date.today(), bank = 'FACTA FINANCEIRA')

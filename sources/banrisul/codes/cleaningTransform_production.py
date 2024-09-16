@@ -6,7 +6,7 @@ from readDownload import read_downaload
 from cleaningTransformaData import cleaningData, transformationData, saveStageArea
 from inputDataTransformed import inputsDB
 import datetime
-from upDateStagingAreaProduction import updateStaginArea
+# from upDateStagingAreaProduction import updateStaginArea
 
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningProduction(date: datetime.date):

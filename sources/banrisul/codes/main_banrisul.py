@@ -15,9 +15,10 @@ def main():
         date += datetime.timedelta(days = 1)
     
     # Gerando relatórios Storm
-    mainStorm.main(date=datetime.date.today(), bank='Insira o banco')
+    mainStorm.main(date=datetime.date.today(), bank='BANCO BANRISUL')
 
 
 if __name__ == "__main__":
     main()
+    print("Processos banrisul finalizados.")
         

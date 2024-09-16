@@ -33,9 +33,9 @@ class updateStaginAreaZero():
                 -- Atualizando usuario
                 DELETE from contrato
                 where 
-                    valor_cms_repasse == '0.0'
+                    valor_cms_repasse == '0,00' or valor_cms_repasse == '0' or valor_cms_repasse == '0.00' 
                 and 
-                    valor_bonus_repasse == '0'
+                    valor_bonus_repasse == '0,00' or valor_bonus_repasse == '0' or valor_bonus_repasse == '0.00'
                 and 
                     nome_banco == 'FACTA FINANCEIRA'
 
@@ -44,6 +44,7 @@ class updateStaginAreaZero():
             cur.executescript(query)
         except sqlite3.OperationalError:
             raise
+            # pass
         con.commit()
         cur.close()
         con.close()

@@ -13,7 +13,7 @@ def cleaningImportation(bank: str, date = datetime.date):
 
     # Trabalhando na tabela de produção
     production = read_downaload().read_data(
-                    bank='crefisa',
+                    bank='banrisul',
                     date = date,
                     type_transference = ['importation'],
                     engine = ['csv'],

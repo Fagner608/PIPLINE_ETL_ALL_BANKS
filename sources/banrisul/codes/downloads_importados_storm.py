@@ -172,5 +172,5 @@ class download_importados_storm():
                 pbar_total.update(1)
 
 # Debug
-# date = datetime.date(2024, 6, 5)
-# download_importados_storm().tqdm_bar(date_work = date, bank = 'crefisa')
+# date = datetime.date.today()
+# download_importados_storm().tqdm_bar(date_work = date, bank = 'BANCO BANRISUL')

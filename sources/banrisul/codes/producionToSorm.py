@@ -1,13 +1,14 @@
 # obter propostas
 import pandas as pd
 import datetime
-
+import os
 # Classe para relatorio de producao - recebe contratos nao importados, e cria relatorio
  # basta ajustar os campos que o storm espera receber
 import sys
 sys.path.append("../../modules")
 from relatoriosNaoImportados import relatoriosNaoImportados
-
+import locale
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 class productionToStorm():
       
         def __init__(self):
@@ -20,6 +21,8 @@ class productionToStorm():
                                         'NUMERO PARCELAS',
                                         'VALOR PARCELAS',
                                         'VALOR OPERACAO',
+                                        'VALOR LIBERADO', # incluir
+                                        'VALOR QUITAR', # incluir
                                         'USUARIO BANCO',
                                         'SITUACAO',
                                         'DATA DE PAGAMENTO',
@@ -38,6 +41,7 @@ class productionToStorm():
                                    "tipo_operacao",
                                    "quantidade_parcela_prazo",
                                    "valor_parcela",
+                                   "valor_bruto",
                                    "valor_liquido",
                                    "codigo_usuario_digitador",
                                    "situacao",
@@ -66,8 +70,15 @@ class productionToStorm():
     
                 dados = dados[self.columns_select]
                 # dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
+                # dados['valor_liquido'] = dados['valor_liquido'].map(lambda x: locale.currency(x, symbol=False, grouping=True))
+                # dados['valor_bruto'] = dados['valor_bruto'].map(lambda x: locale.currency(x, symbol=False, grouping=True))
+                dados.insert(10, 'VALOR QUITAR', '')
+                
+                
+
                 dados.columns = self.columns_to_rename
-                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False)
+                os.makedirs(path_to_save, exist_ok= True)
+                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, encoding = 'latin1', sep = ';')
 
 # debug     
-# productionToStorm().makeReport(date = datetime.date(2024, 6, 20), bank = 'BANCO CREFISA')
+# productionToStorm().makeReport(date = datetime.date.today(), bank = 'BANCO BANRISUL')
