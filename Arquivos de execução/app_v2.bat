@@ -13,4 +13,5 @@ pip install -r requirements_1.txt
 pip install -r requirements_2.txt
 
 :: Executa o Streamlit
-streamlit run teste_layout_v3.py
+streamlit run teste_layout_v4.py
+pause
