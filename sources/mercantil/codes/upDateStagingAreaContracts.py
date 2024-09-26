@@ -55,7 +55,11 @@ class updateStaginAreaContracts():
             WHEN codigoproduto IN (13728071) AND quantidadeparcelas between 72 and 82 THEN 2.75
             WHEN codigoproduto IN (13728071) AND quantidadeparcelas == 83 THEN 3.58
             WHEN codigoproduto IN (13728071) AND quantidadeparcelas == 84 THEN 5.50
-            
+
+            -- regra empréstimo pessoal
+            WHEN codigoproduto IN (500, 501) AND quantidadeparcelas == 6 THEN 6
+            WHEN codigoproduto IN (500, 501) AND quantidadeparcelas == 12 THEN 6
+
             ELSE percentual_cms_repasse
         END;
             
@@ -80,7 +84,7 @@ class updateStaginAreaContracts():
 
         -- atualizando nome_operacao
         UPDATE staging_area set nome_operacao = CASE
-        WHEN codigoproduto in ('13728077', '13728076', '13728078', '13728127') THEN 'MARGEM LIVRE (NOVO)'
+        WHEN codigoproduto in ('13728077', '13728076', '13728078', '13728127', '500', '501') THEN 'MARGEM LIVRE (NOVO)'
         WHEN codigoproduto in ('13728071') THEN 'CARTÃO C/ SAQUE'
         else nome_operacao
         end;
