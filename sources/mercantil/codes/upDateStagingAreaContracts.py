@@ -60,6 +60,10 @@ class updateStaginAreaContracts():
             WHEN codigoproduto IN (500, 501) AND quantidadeparcelas == 6 THEN 6
             WHEN codigoproduto IN (500, 501) AND quantidadeparcelas == 12 THEN 6
 
+            -- regra cartao consignado
+            WHEN codigoproduto IN (202) THEN 11.50
+            WHEN codigoproduto IN (200) THEN 12.50
+
             ELSE percentual_cms_repasse
         END;
             
@@ -85,7 +89,7 @@ class updateStaginAreaContracts():
         -- atualizando nome_operacao
         UPDATE staging_area set nome_operacao = CASE
         WHEN codigoproduto in ('13728077', '13728076', '13728078', '13728127', '500', '501') THEN 'MARGEM LIVRE (NOVO)'
-        WHEN codigoproduto in ('13728071') THEN 'CARTÃO C/ SAQUE'
+        WHEN codigoproduto in ('13728071', '200', '202') THEN 'CARTÃO C/ SAQUE'
         else nome_operacao
         end;
 

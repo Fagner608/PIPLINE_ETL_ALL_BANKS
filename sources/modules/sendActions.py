@@ -51,6 +51,7 @@ def move_file(date: datetime.date,
         while any(file.endswith(".part") for file in listdir(path_download_tmp)):
                time.sleep(2)
                continue
+        time.sleep(5)
         file = listdir(path_download_tmp)[0]
         makedirs(path_to_move, exist_ok=True)
         move(path_download_tmp + file, path_to_move + f"{date}{Path(file).suffix}")

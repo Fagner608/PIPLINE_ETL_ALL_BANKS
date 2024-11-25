@@ -182,7 +182,7 @@ class download_importados_storm():
 
     def tqdm_bar(self, bank: str, date = datetime.date):
 
-        processos = [("Download do relatório de importacao do crefisa", self.dowloadImportation)]
+        processos = [("Download do relatório de importacao do PAN", self.dowloadImportation)]
 
 
         with tqdm(total=len(processos), desc="Executando processos") as pbar_total:

@@ -74,7 +74,7 @@ class productionToStorm():
                 
                 import os
                 os.makedirs(path_to_save, exist_ok=True)
-                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';', encoding = 'UTF-8')
+                dados.to_csv(path_to_save + f'{bank}_{date}.csv', index = False, sep = ';', encoding = 'latin1')
 
 # debug     
 # productionToStorm().makeReport(date = datetime.date.today(), bank = 'BANCO MERCANTIL DO BRASIL')

@@ -15,6 +15,7 @@ from selenium.common.exceptions import *
 
 
 import datetime
+import time
 import pandas as pd
 from time import strptime
 
@@ -89,12 +90,13 @@ class download():
                 date_2 = date_work - datetime.timedelta(days = 7)
                 # Entrando na página de comissões
                 try:
-                    button = WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu4')))
-                    driver.execute_script('arguments[0].click();', button)
-                    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu4 > li:nth-child(2) > a:nth-child(1)'))).click()
-                except TimeoutException:
+                    
                     WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu4'))).click()
                     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu4 > li:nth-child(2) > a:nth-child(1)'))).click()
+                except TimeoutException:
+                    WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu5'))).click()
+                    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu5 > li:nth-child(2) > a:nth-child(1)'))).click()
+                    
                     
                 
 
@@ -119,7 +121,9 @@ class download():
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlStatusPagCliente > option:nth-child(3)'))).click()
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlTipoResultado > option:nth-child(1)'))).click()
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#ddlTipoResultado > option:nth-child(1)'))).click()
+                time.sleep(5)
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#btn'))).click()
+                time.sleep(5)
                 
                 try:
                     allert = driver.switch_to.alert
@@ -131,6 +135,7 @@ class download():
 
                 except NoAlertPresentException:
                     pass
+
                 driver.close()
         
 
@@ -172,4 +177,5 @@ class download():
                 pbar_total.update(1)
 
 # Debug
-# download().tqdm_bar(date_work = date)
+
+# download().tqdm_bar(date_work = datetime.date.today())
