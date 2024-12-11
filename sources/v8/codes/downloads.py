@@ -29,8 +29,8 @@ class download():
 
     def __init__(self):
         self.credentials = dotenv_values("../data/.env")
-        self.return_driver = login(bank = 'crefisa', 
-                                   credentials = self.credentials).send_keys(url='',  # insira a URL da página de login
+        self.return_driver = login(bank = 'v8_cartao', 
+                                   credentials = self.credentials).send_keys(url='https://v8digital.app/WebFIMenuMVC/Login/AC.UI.LOGIN.aspx?FISession=7256a7a66f4',  # insira a URL da página de login
                                                                              element_list = ['#txtUsuario', '#txtSenha', '#btnLogin'] #insira o CSS_select do usuario, senha e botao 'enter'
                                                                              )
         self.driver = self.return_driver
@@ -199,4 +199,5 @@ class download():
                 pbar_total.update(1)
 
 # Debug - exemplo de chamaa do modulo
-# download().tqdm_bar(date_work = date)
+
+download().tqdm_bar(date_work = datetime.date())

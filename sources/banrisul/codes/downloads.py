@@ -120,7 +120,8 @@ class download():
             driver.find_element(By.XPATH,"//*[contains(@class, 'ant-calendar-picker-container')]").find_elements(By.XPATH, "//input[@placeholder='Data de início']")[3].send_keys(date_ini.strftime("%d/%m/%Y"))
             time.sleep(0.5)
             
-            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class, 'ant-calendar-range-part') and contains(@class, 'ant-calendar-range-right')]//div[text()='{int(date_work.strftime('%d'))}']"))).click()
+            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.ant-calendar-today'))).click()
+            # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class, 'ant-calendar-range-part') and contains(@class, 'ant-calendar-range-right')]//div[text()='{int(date_work.strftime('%d'))}']"))).click()
 
             driver.find_element(By.XPATH,"//button[contains(@class, 'ant-btn-primary')]//*[contains(., 'Visualizar')]/..").click()
 
@@ -164,8 +165,8 @@ class download():
             
             # driver.find_element(By.CLASS_NAME,"ant-calendar-range-part ant-calendar-range-right").find_element(By.CLASS_NAME, 'ant-calendar-body').find_element(By.XPATH,"//div[text()='{}']".format(int(date_work.strftime("%d")))).click()
 
-            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class, 'ant-calendar-range-part') and contains(@class, 'ant-calendar-range-right')]//div[text()='{int(date_work.strftime('%d'))}']"))).click()
-
+            # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class, 'ant-calendar-range-part') and contains(@class, 'ant-calendar-range-right')]//div[text()='{int(date_work.strftime('%d'))}']"))).click()
+            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.ant-calendar-today'))).click()
             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.ant-calendar-today'))).send_keys(date_work.strftime("%d/%m/%Y"))
 
             driver.find_element(By.XPATH,"//button[contains(@class, 'ant-btn-primary')]//*[contains(., 'Visualizar')]/..").click()
@@ -230,5 +231,5 @@ class download():
                     
                 pbar_total.update(1)
 
-# Debug - exemplo de chamaa do modulo
+# Debug - exemplo de chamada do modulo
 # download().tqdm_bar(date_work = datetime.date.today())

@@ -7,7 +7,7 @@ import mainDownloadImportation
 
 def main():
     # Extract
-    # main_download.main(date = datetime.date.today())
+    main_download.main(date = datetime.date.today())
     
     # Transform and Load
     date = datetime.date.today() - datetime.timedelta(days = 3)

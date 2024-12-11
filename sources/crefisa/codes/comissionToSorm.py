@@ -59,7 +59,7 @@ class comissionToStorm():
 
                 dados['#VALOR_BASE_BRUTO#'] = dados['valor_liquido']
                 try:
-                    dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
+                    dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%d-%m %H:%M:%S').dt.strftime("%d/%m/%Y")
                 except ValueError:
                      pass
                      
