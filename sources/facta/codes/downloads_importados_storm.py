@@ -59,7 +59,7 @@ class download_importados_storm():
         calendar_year = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.bootstrap-datetimepicker-widget > div > div > table > thead > tr > th:nth-child(2)'))).text.upper()
                                                                                                             
         while date.strftime("%B %Y").upper() != calendar_year:
-            if int(calendar_year.split(" ")[1]) <= date.year:
+            if int(calendar_year.split(" ")[1]) >= date.year:
                 if search('inicio', path):
                     self.__click_button_css_selector(path = 'div.bootstrap-datetimepicker-widget > div > div > table > thead > tr > th:nth-child(1)', name_button = 'Encontrar mês')
                     calendar_year = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.bootstrap-datetimepicker-widget > div > div > table > thead > tr > th:nth-child(2)'))).text.upper()

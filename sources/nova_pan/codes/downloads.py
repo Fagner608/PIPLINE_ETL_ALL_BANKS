@@ -53,7 +53,7 @@ class download():
         # Realiza dowenload somente se o download não existir
         driver = self.driver
         date_to = date_work
-        date_from = date_to - datetime.timedelta(days = 30)
+        date_from = date_to - datetime.timedelta(days = 7)
         # Entrando na página de comissões
         ########################## Inicie aqui o codigo de extracao ##########################|
         
@@ -292,5 +292,3 @@ class download():
 # Debug - exemplo de chamaa do modulo
 # download().tqdm_bar(date_work = datetime.date.today())
 
-
-## estou testando o downladComission

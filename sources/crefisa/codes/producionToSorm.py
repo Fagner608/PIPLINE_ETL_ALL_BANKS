@@ -65,7 +65,6 @@ class productionToStorm():
             if dados is not None:
     
                 dados = dados[self.columns_select]
-                print(dados.tail())
                 try:
                     dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%d-%m %H:%M:%S').dt.strftime("%d/%m/%Y")
                 except ValueError:
