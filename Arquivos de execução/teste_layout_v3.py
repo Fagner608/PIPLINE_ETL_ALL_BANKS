@@ -47,7 +47,7 @@ def main():
 
     # Dicionário com os nomes dos botões e caminhos dos arquivos .lnk
     batch_files = {
-        "V8 - CARTAO": "executa_v8 - Atalho.lnk",
+        "V8 - cartão": "executa_v8 - Atalho.lnk",
         "FACTA": "executa_facta - Atalho.lnk",
         "CREFISA": "executar_crefisa - Atalho.lnk",
         "PAN": "executar_nova_pan - Atalho.lnk",

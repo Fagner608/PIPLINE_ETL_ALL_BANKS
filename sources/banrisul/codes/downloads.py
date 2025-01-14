@@ -15,6 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
+from selenium.webdriver import Keys, ActionChains
 
     # manipulacao dedados
 import datetime
@@ -33,8 +34,11 @@ class download():
         self.credentials = dotenv_values("../data/.env")
         self.return_driver = self.__send_keys(bank = 'banrisul', url="https://bemweb.bempromotora.com.br/autenticacao/login?redirect=%2Fdashboard",  # insira a URL da página de login
                                                                             #  element_list = ['#usuario', '#txtSenha', '#btnLogin'] #insira o CSS_select do usuario, senha e botao 'enter'
-                                                                             element_list = ['#usuario', '#btn-login', '#senha', '#btn-login', '#pin'] #insira o CSS_select do usuario, senha e botao 'enter'
-                                                                             ) # type: ignore
+                                                                             element_list = ['#user', #usuário
+                                                                                             '.login-button-container > button:nth-child(1)',  #avança
+                                                                                             '#password', #senha
+                                                                                             'button.outline-secondary:nth-child(2)'] #entrar
+                                                                             ) # type: ignore #user
         self.driver = self.return_driver
         
 
@@ -43,7 +47,7 @@ class download():
     def __send_keys(self, url: str, bank: str, element_list: list, storm = False):
 
         #usuario, clica
-        # depois abre senha e recaptcha
+        # depois abre senha e pin
 
         driver = openFirefox()._initializeDriver(bank = bank)
         driver.get(url)
@@ -62,12 +66,13 @@ class download():
                         key = self.credentials['LOGIN_PASSWORD'] if not storm else self.credentials['LOGIN_PASSWORD_STORM'])
         
         
+        # alterar o prcedimento para tab + tab + digitar o pin
+        ActionChains(driver).send_keys(Keys.TAB).perform()
+        ActionChains(driver).send_keys(Keys.TAB).perform()
+
         # tentar inputar o PIN
-        input_pin = input("Informe o PIN aqui:")
-        sendAction(driver = driver,
-                        action='send_keys',
-                        element= element_list[4], 
-                        key = input_pin)
+        input_pin = input("Insira o PIN diretamente na página, depois pressione ENTER aqui.")
+        
         
         sendAction(action='waitCaptcha')
         try:
@@ -110,7 +115,8 @@ class download():
             # clica em consignado no 'menu'
             driver.get('https://bemweb.bempromotora.com.br/consignado/consulta-comissao')
 
-            WebDriverWait(driver, 20).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+            WebDriverWait(driver, 20).until(lambda driver: 
+            driver.execute_script('return document.readyState') == 'complete')
 
             driver.find_element(By.ID,"efetivacaoDataIni").find_elements(By.TAG_NAME,"svg")[-1].click() 
 

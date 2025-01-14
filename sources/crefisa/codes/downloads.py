@@ -87,7 +87,7 @@ class download():
                 for i in listdir("./download_tmp/"):
                     remove(f"./download_tmp/{i}")
                 driver = self.driver
-                date_2 = date_work - datetime.timedelta(days = 7)
+                date_2 = date_work - datetime.timedelta(days = 15)
                 # Entrando na página de comissões
                 try:
                     
