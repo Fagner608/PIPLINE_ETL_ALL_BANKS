@@ -67,6 +67,8 @@ class productionToStorm():
                 dados = dados[self.columns_select]
                 dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
                 dados.insert(11, 'DATA DE PAGAMENTO', dados['data_pagamento_cliente'])
+                dados['quantidade_parcela_prazo'] = dados.apply(lambda row: int(row['quantidade_parcela_prazo'] / 12) if row['nome_convenio'] == 'FGTS' else row['quantidade_parcela_prazo'], axis=1)
+
                 dados.columns = self.columns_to_rename
                 os.makedirs(path_to_save, exist_ok=True)
                 
@@ -76,5 +78,3 @@ class productionToStorm():
 # productionToStorm().makeReport(date = datetime.date.today(), bank = 'FACTA FINANCEIRA')
 
 
-
-# USUARIO BANCO inserir usuário banco

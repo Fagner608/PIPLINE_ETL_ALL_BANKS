@@ -38,7 +38,8 @@ class comissionToStorm():
                                    "quantidade_parcela_prazo",
                                    "data_pagamento_cliente",	
                                    "nome_tabela",
-                                   'tipo_operacao'
+                                   'tipo_operacao',
+                                   'nome_convenio'
                                    
                                    ]
 
@@ -65,6 +66,8 @@ class comissionToStorm():
                 dados['data_pagamento_cliente'] = pd.to_datetime(dados['data_pagamento_cliente'], format='%Y-%m-%d %H:%M:%S').dt.strftime("%d/%m/%Y")
                 dados['valor_cms_repasse'] = dados['valor_cms_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
                 dados['valor_bonus_repasse'] = dados['valor_bonus_repasse'].map(lambda x: locale.currency(float(x), symbol=False, grouping=True) if isinstance(x, (int, float)) else x)
+                dados['quantidade_parcela_prazo'] = dados.apply(lambda row: int(row['quantidade_parcela_prazo'] / 12) if row['nome_convenio'] == 'FGTS' else row['quantidade_parcela_prazo'], axis=1)
+                dados.drop(['nome_convenio'], axis = 1, inplace = True)
                 
                 cartao = dados[dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO|Car|car")]
                 normal = dados[~dados["tipo_operacao"].str.contains("Cartão|CARTÃƒO|CARTÃO|Car|car")]
