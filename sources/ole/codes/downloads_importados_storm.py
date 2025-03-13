@@ -96,7 +96,7 @@ class download_importados_storm():
     def calendar_manipulate(self):
             locale.setlocale(locale.LC_ALL, 'pt_pt.UTF-8')
             
-            start_date = datetime.date.today() - datetime.timedelta(days = 30)
+            start_date = datetime.date.today() - datetime.timedelta(days = 25)
             
             
             print(start_date)
