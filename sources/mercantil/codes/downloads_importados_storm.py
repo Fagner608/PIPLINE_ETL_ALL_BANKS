@@ -156,7 +156,7 @@ class download_importados_storm():
         move_file(date= date_work, type_transference= ['importation'])
 
 
-    def tqdm_bar(self, bank: str, date = datetime.date):
+    def tqdm_bar(self, bank: str, date: datetime.date):
 
         processos = [("Download do relatório de importacao do mercantil", self.dowloadImportation)]
 
@@ -174,4 +174,5 @@ class download_importados_storm():
 
 # Debug
 # date = datetime.date(2024, 6, 5)
-# download_importados_storm().tqdm_bar(date_work = date, bank = 'crefisa')
+# download_importados_storm().tqdm_bar(date = datetime.date.today(),
+#                                       bank = 'BANCO MERCANTIL DO BRASIL')

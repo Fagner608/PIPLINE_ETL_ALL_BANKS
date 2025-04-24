@@ -13,7 +13,7 @@ def main(date: datetime.date, bank: str):
                     (f"Limpando e transformando dados de importacao {date} - {bank}", cleaningTransform_importation.cleaningImportation),
                     (f"Gerenciando status de importação - {bank}", cleaningTransform_importation.statusManager),
                     (f"Limpando e transformando dados de comissão {date} - {bank}", comissionToSorm.comissionToStorm().makeReport),
-                    (f"Limpando e transformando dados de comissão {date} - {bank}", producionToSorm.productionToStorm().makeReport)
+                    (f"Limpando e transformando dados de produção {date} - {bank}", producionToSorm.productionToStorm().makeReport)
                     ]
         
        

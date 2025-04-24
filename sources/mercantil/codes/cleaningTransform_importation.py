@@ -9,8 +9,10 @@ import sqlite3
 import re
 
 
-def cleaningImportation(bank: str, date = datetime.date):
+EXECUTE_STATUS_MANAGER = False
 
+def cleaningImportation(bank: str, date = datetime.date):
+    global EXECUTE_STATUS_MANAGER
     # Trabalhando na tabela de produção
     production = read_downaload().read_data(
                     bank='mercantil',
@@ -23,6 +25,7 @@ def cleaningImportation(bank: str, date = datetime.date):
                     encoding = 'latin-1'
                 )
     if production is not None:
+        EXECUTE_STATUS_MANAGER = True
         result = production
         result['ADE'] = result['ADE'].apply(lambda x: str(x)[:12])
         result = result[['Banco', 'Nome Arquivo', 'ADE']]
@@ -46,23 +49,24 @@ def cleaningImportation(bank: str, date = datetime.date):
 
 
 def statusManager(bank:str, date: datetime.date):
-    
-    con, cur = inputsDB().conDatabase()
+    if EXECUTE_STATUS_MANAGER:
 
-    # Gerenciamento de status - ainda vou incluir aqui a data da importacao
-    try:
-        cur.execute("""
-            update contrato -- retorna ade
-            set status_importacao = 'importado' -- da tabela contrato
-            WHERE (status_importacao != 'importada' OR status_importacao IS NULL) -- se o status nao for importado
-            AND numero_ade IN (SELECT ade FROM staging_area) --e a ade esteja no staging area
-        """)
-    except sqlite3.OperationalError:
-        pass
-    con.commit()
-    cur.close()
-    con.close()
+        con, cur = inputsDB().conDatabase()
+
+        # Gerenciamento de status - ainda vou incluir aqui a data da importacao
+        try:
+            cur.execute("""
+                update contrato -- retorna ade
+                set status_importacao = 'importado' -- da tabela contrato
+                WHERE (status_importacao != 'importada' OR status_importacao IS NULL) -- se o status nao for importado
+                AND numero_ade IN (SELECT ade FROM staging_area) --e a ade esteja no staging area
+            """)
+        except sqlite3.OperationalError:
+            pass
+        con.commit()
+        cur.close()
+        con.close()
 
 #Debug
-# cleaningImportation('crefisa', date=datetime.date(2024, 6, 18))
-# statusManager('crefisa', date=datetime.date(2024, 6, 16))
+# cleaningImportation('crefisa', date=datetime.date.today())
+# statusManager('crefisa', date=datetime.date.today())

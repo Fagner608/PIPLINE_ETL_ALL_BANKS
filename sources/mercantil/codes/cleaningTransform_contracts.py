@@ -56,6 +56,8 @@ def CleaningContracts(date: datetime.date):
         # final_production['tipo_contrato'] = final_production['tipo_contrato'].str.split("__", expand = True)[1]
         
         # metodo par enviar os dados para staging_area no banco de dados
+        # print(final_contracts.tail())
+        # print(final_contracts.columns)
         saveStageArea().inputTable(table = final_contracts)
   
 
@@ -143,8 +145,6 @@ def load_contracts(date: datetime.date):
     # situacao
     total_dict[0]['cliente_id'] = 'cliente_id'
     
-
-
     # metodo que fara o input dos dados
     inputsDB().loadInput(list_tables = list_tables,
                          total_dict = total_dict, contracts = True, staging_area_contato = 'numeroproposta')

@@ -55,6 +55,7 @@ class comissionToStorm():
             
             dados = self.comissionReport(date=date, bank=bank)
 
+
             if dados is not None:
                 dados = dados[self.columns_select]
                 dados['valor_cms_repasse'] = dados['valor_cms_repasse'].map(lambda x: locale.currency(x, symbol=False, grouping=True))
@@ -74,6 +75,7 @@ class comissionToStorm():
                                       '#CODIGO_TABELA#',	
                                       '#VALOR_BASE_BRUTO#']
                 normal.columns = self.columns_to_rename
+                
                 os.makedirs(path_to_save, exist_ok=True)
                 if not cartao.empty:
                     cartao.to_csv(path_to_save + f'CARTAO {bank}_{date}.csv', index = False, sep = ';', encoding = 'UTF-8')

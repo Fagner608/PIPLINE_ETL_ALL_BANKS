@@ -49,9 +49,9 @@ class updateStaginAreaContracts():
             --WHEN valortarifatcc == 0 AND codigoproduto IN (13728077, 13728127, 13728128) THEN 8
             ------------ depreciado fim ---------------------
 
-            WHEN WHEN codigoproduto IN (13728076, 13728078, 13728079) THEN 6
+            WHEN codigoproduto IN (13728076, 13728078, 13728079) THEN 6
 
-            WHEN WHEN codigoproduto IN (13728077, 13728127, 13728128) THEN 16
+            WHEN codigoproduto IN (13728077, 13728127, 13728128) THEN 16
 
             -- regra cartão
             WHEN codigoproduto IN (13728071) AND quantidadeparcelas between 1 and 17 THEN 0
@@ -107,10 +107,11 @@ class updateStaginAreaContracts():
 
         '''
         try:
+            #print(query)
             cur.executescript(query)
         except sqlite3.OperationalError:
-            # raise
-            pass
+            raise
+            # pass
         con.commit()
         cur.close()
         con.close()

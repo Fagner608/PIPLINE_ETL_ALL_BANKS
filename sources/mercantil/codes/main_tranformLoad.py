@@ -8,11 +8,18 @@ from tqdm import tqdm
 def main(date: datetime.date):
     
     processos = [
-                #  (f"Limpando e transformando dados de comissão {date} - mercantil", cleaningTransforma_comission.CleaningComission),
-                #  (f"Atualizando tabelas do banco de dados {date} - mercantil", cleaningTransforma_comission.load_comission),
+                ##  (f"Limpando e transformando dados de comissão {date} - mercantil", cleaningTransforma_comission.CleaningComission), só tem relatório de produção
+                ##  (f"Atualizando tabelas do banco de dados {date} - mercantil", cleaningTransforma_comission.load_comission), só tem relatório de produção
+                 
+                 ## as informações nas outras tabelas estão certas
                  (f"Limpando e transformando dados de produção {date} - mercantil", cleaningTransform_production.CleaningProduction),
                  (f"Atualizando tabelas do banco de dados {date} - mercantil", cleaningTransform_production.load_production),
-                 (f"Limpando e transformando dados de produção {date} - mercantil", cleaningTransform_contracts.CleaningContracts),
+
+
+                
+                 (f"Limpando e transformando dados de contrato {date} - mercantil", cleaningTransform_contracts.CleaningContracts),
+
+
                  (f"Input dos contratos {date} - mercantil", cleaningTransform_contracts.load_contracts)
                  ]
 
