@@ -122,40 +122,42 @@ class read_downaload():
         for file_Search in os.listdir(path_to_read):
             if file_Search.startswith(date.strftime("%Y-%m-%d")):
                file =  file_Search
-    
+        # print(os.path.getsize(path_to_read + file))
+        
         if file is not None:
-            if engine == 'csv':
-                dados = pd.read_csv(path_to_read + file,
-                                    encoding = encoding,
-                                    decimal=decimal,
-                                    sep=sep,
-                                    thousands=thousands,
-                                    header=header,
-                                    parse_dates = parse_dates,
-                                    date_format = format_parse_dates,
-                                    converters=converters,
-                                    delimiter = delimiter)
-                
-            elif engine == 'excel':
-                dados = pd.read_excel(path_to_read + file,
-                                      decimal=decimal,
-                                      thousands=thousands,
-                                      header=header,
-                                      sheet_name=sheet_name,
-                                      parse_dates=parse_dates,
-                                      date_format=format_parse_dates,
-                                      converters=converters,
-                                      skiprows = skiprows
-                                    #   skipfooter = skipfooter
-                                      ) # type: ignore
-                
-            elif engine == 'html':
-                dados = pd.read_html(path_to_read + file,
-                                     decimal = decimal,
-                                    thousands=thousands,
-                                    header=header,
-                                    parse_dates=parse_dates,
-                                    converters=converters)[0]
+            if os.path.getsize(path_to_read + file) > 1:
+                if engine == 'csv':
+                    dados = pd.read_csv(path_to_read + file,
+                                        encoding = encoding,
+                                        decimal=decimal,
+                                        sep=sep,
+                                        thousands=thousands,
+                                        header=header,
+                                        parse_dates = parse_dates,
+                                        date_format = format_parse_dates,
+                                        converters=converters,
+                                        delimiter = delimiter)
+                    
+                elif engine == 'excel':
+                    dados = pd.read_excel(path_to_read + file,
+                                        decimal=decimal,
+                                        thousands=thousands,
+                                        header=header,
+                                        sheet_name=sheet_name,
+                                        parse_dates=parse_dates,
+                                        date_format=format_parse_dates,
+                                        converters=converters,
+                                        skiprows = skiprows
+                                        #   skipfooter = skipfooter
+                                        ) # type: ignore
+                    
+                elif engine == 'html':
+                    dados = pd.read_html(path_to_read + file,
+                                        decimal = decimal,
+                                        thousands=thousands,
+                                        header=header,
+                                        parse_dates=parse_dates,
+                                        converters=converters)[0]
 
 
 
