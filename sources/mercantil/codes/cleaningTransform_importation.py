@@ -13,6 +13,7 @@ EXECUTE_STATUS_MANAGER = False
 
 def cleaningImportation(bank: str, date = datetime.date):
     global EXECUTE_STATUS_MANAGER
+    EXECUTE_STATUS_MANAGER = False
     # Trabalhando na tabela de produção
     production = read_downaload().read_data(
                     bank='mercantil',

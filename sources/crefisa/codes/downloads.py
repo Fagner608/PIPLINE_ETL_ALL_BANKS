@@ -89,9 +89,21 @@ class download():
                 driver = self.driver
                 date_2 = date_work - datetime.timedelta(days = 15)
                 # Entrando na página de comissões
+
                 try:
-                    
+
+                    WebDriverWait(driver,200 ).until(lambda x:  x.execute_script("return document.readyState") == 'complete')
+                    button  = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#corpoModalCrefisaAvisoAutenticacao > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)')))
+                    driver.execute_script("arguments[0].click();", button)
+                except Exception as Exc:
+                    raise(Exc)
+
+
+                try:
+                    WebDriverWait(driver,200 ).until(lambda x:  x.execute_script("return document.readyState") == 'complete')
+                    time.sleep(10)
                     WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu4'))).click()
+                    
                     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu4 > li:nth-child(2) > a:nth-child(1)'))).click()
                 except TimeoutException:
                     WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu5'))).click()
@@ -177,5 +189,4 @@ class download():
                 pbar_total.update(1)
 
 # Debug
-
 # download().tqdm_bar(date_work = datetime.date.today())

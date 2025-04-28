@@ -7,7 +7,7 @@ from cleaningTransformaData import cleaningData, transformationData, saveStageAr
 from inputDataTransformed import inputsDB
 import datetime
 from upDateStagingAreaContracts import updateStaginAreaContracts
-
+EXECUTE_STATUS_MANAGER = False
 # Funcao para executar limpeza, tratamento e transformacao
 def CleaningContracts(date: datetime.date):
 
@@ -18,6 +18,8 @@ def CleaningContracts(date: datetime.date):
         Execute a funcao uma primeira vez para pegar os novos labels, e informar nos argumentos que seguem.
 
     '''
+    global EXECUTE_STATUS_MANAGER
+    EXECUTE_STATUS_MANAGER = False
     ## Carga da tabela desejada
     contracts = read_downaload().read_data(
                                         bank='mercantil', # informe o nome do banco conforme esta no diretorio criado
@@ -33,7 +35,7 @@ def CleaningContracts(date: datetime.date):
                     )
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
     if contracts is not None:
-
+        EXECUTE_STATUS_MANAGER = True
         # result = cleaningData().cleaning(dataFrame = contracts,
         #                                         typeData = ['monetary'],
         #                                         columns_convert = ['valorparcela',	'valorfinanciado',	'valoremprestimo'] # informe variaveis com valores monetarios, conforme exemplo
@@ -72,83 +74,83 @@ def load_contracts(date: datetime.date):
         - atribua ao lado direito da chave,o label da variavel que sera setada no banco de dados, conforme exemplo abaixo. USe os labels tratados.
 
     '''
+    if EXECUTE_STATUS_MANAGER:
+        # Atualizando valores na tabela staging_area
+        updateStaginAreaContracts().upDatating(bank='BANCO MERCANTIL DO BRASIL')
 
-    # Atualizando valores na tabela staging_area
-    updateStaginAreaContracts().upDatating(bank='BANCO MERCANTIL DO BRASIL')
+        #lista para consultar os atributos das tabelas
+        list_tables = ['contrato']
 
-    #lista para consultar os atributos das tabelas
-    list_tables = ['contrato']
+        # metodo que retornar os atributos que atualizaremos, na tabela em producao
+        total_dict = inputsDB().totalAttributes(list_tables = list_tables)
+        
+        # preencher os atributos com o correspondente da tabela carregada no staging_area
+        #Tabela tipo_contrato (ex: novo, margem_livre, etc - como vier na fonte)
+        total_dict[0]['tipo_contrato'] = 'nome_operacao'
+        
+        # status_importacao (sera enviado com default de nao_importado) - nao preencher
+        # total_dict[0]['status_importacao'] = ''
 
-    # metodo que retornar os atributos que atualizaremos, na tabela em producao
-    total_dict = inputsDB().totalAttributes(list_tables = list_tables)
-    
-    # preencher os atributos com o correspondente da tabela carregada no staging_area
-    #Tabela tipo_contrato (ex: novo, margem_livre, etc - como vier na fonte)
-    total_dict[0]['tipo_contrato'] = 'nome_operacao'
-    
-    # status_importacao (sera enviado com default de nao_importado) - nao preencher
-    # total_dict[0]['status_importacao'] = ''
+        # tipo_operacao (a informacao depende do tipo de contrato)
+        total_dict[0]['tipo_operacao'] = 'nome_operacao'
+        
+        # numero
+        total_dict[0]['numero_ade'] = 'numeroproposta'
+        
+        #
+        total_dict[0]['quantidade_parcela_prazo'] = 'quantidadeparcelas'
+        
+        #
+        total_dict[0]['valor_parcela'] = 'valorparcela'
+        
+        total_dict[0]['valor_bruto'] = 'valorfinanciado'
+        
+        total_dict[0]['valor_liquido'] = 'valoremprestimo'
+        
+        total_dict[0]['valor_base'] = 'valoremprestimo'
+        
+        total_dict[0]['percentual_cms_repasse'] = 'percentual_cms_repasse'
+        
+        total_dict[0]['valor_cms_repasse'] = 'valor_cms_repasse'
+        
+        total_dict[0]['percentual_bonus_repasse'] = ''
+        
+        total_dict[0]['valor_bonus_repasse'] = ''
+        
+        total_dict[0]['data_pagamento_cliente'] = 'datacadastro'
+        
+        total_dict[0]['percentual_cms_a_vista'] = ''
+        
+        total_dict[0]['valor_cms_a_vista'] = ''
+        
+        # tabela
+        total_dict[0]['nome_tabela'] = 'codigoproduto'
 
-    # tipo_operacao (a informacao depende do tipo de contrato)
-    total_dict[0]['tipo_operacao'] = 'nome_operacao'
-    
-    # numero
-    total_dict[0]['numero_ade'] = 'numeroproposta'
-    
-    #
-    total_dict[0]['quantidade_parcela_prazo'] = 'quantidadeparcelas'
-    
-    #
-    total_dict[0]['valor_parcela'] = 'valorparcela'
-    
-    total_dict[0]['valor_bruto'] = 'valorfinanciado'
-    
-    total_dict[0]['valor_liquido'] = 'valoremprestimo'
-    
-    total_dict[0]['valor_base'] = 'valoremprestimo'
-    
-    total_dict[0]['percentual_cms_repasse'] = 'percentual_cms_repasse'
-    
-    total_dict[0]['valor_cms_repasse'] = 'valor_cms_repasse'
-    
-    total_dict[0]['percentual_bonus_repasse'] = ''
-    
-    total_dict[0]['valor_bonus_repasse'] = ''
-    
-    total_dict[0]['data_pagamento_cliente'] = 'datacadastro'
-    
-    total_dict[0]['percentual_cms_a_vista'] = ''
-    
-    total_dict[0]['valor_cms_a_vista'] = ''
-    
-    # tabela
-    total_dict[0]['nome_tabela'] = 'codigoproduto'
+        # banco
+        total_dict[0]['nome_banco'] = 'banco'
+        
+        # usuario_digitador_banco
+        total_dict[0]['codigo_usuario_digitador'] = 'loginusuariodigitador'
+        
+        # convenio
+        total_dict[0]['nome_convenio'] = 'nomeconvenio'
+        
+        # usuario_substabelecido
+        total_dict[0]['nome_usuario_substabelecido'] = ''
+        
+        #
+        total_dict[0]['nome_vendedor'] = ''
 
-    # banco
-    total_dict[0]['nome_banco'] = 'banco'
-    
-    # usuario_digitador_banco
-    total_dict[0]['codigo_usuario_digitador'] = 'loginusuariodigitador'
-    
-    # convenio
-    total_dict[0]['nome_convenio'] = 'nomeconvenio'
-    
-    # usuario_substabelecido
-    total_dict[0]['nome_usuario_substabelecido'] = ''
-    
-    #
-    total_dict[0]['nome_vendedor'] = ''
-
-    # situacao
-    total_dict[0]['situacao'] = 'sit_pagamento_cliente'
-    
-    # situacao
-    total_dict[0]['cliente_id'] = 'cliente_id'
-    
-    # metodo que fara o input dos dados
-    inputsDB().loadInput(list_tables = list_tables,
-                         total_dict = total_dict, contracts = True, staging_area_contato = 'numeroproposta')
-    
+        # situacao
+        total_dict[0]['situacao'] = 'sit_pagamento_cliente'
+        
+        # situacao
+        total_dict[0]['cliente_id'] = 'cliente_id'
+        
+        # metodo que fara o input dos dados
+        inputsDB().loadInput(list_tables = list_tables,
+                            total_dict = total_dict, contracts = True, staging_area_contato = 'numeroproposta')
+        
 
 #Debug
 # CleaningContracts(date=datetime.date.today())

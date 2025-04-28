@@ -118,10 +118,10 @@ class read_downaload():
         engine = engine[0]
         file = None
         path_to_read = f'../../{bank}/download/{date.year}/{date.month}/{type_transference[0]}/'
-        
         for file_Search in os.listdir(path_to_read):
             if file_Search.startswith(date.strftime("%Y-%m-%d")):
                file =  file_Search
+               
         # print(os.path.getsize(path_to_read + file))
         
         if file is not None:
