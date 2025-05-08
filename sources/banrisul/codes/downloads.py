@@ -34,10 +34,10 @@ class download():
         self.credentials = dotenv_values("../data/.env")
         self.return_driver = self.__send_keys(bank = 'banrisul', url="https://bemweb.bempromotora.com.br/autenticacao/login?redirect=%2Fdashboard",  # insira a URL da página de login
                                                                             #  element_list = ['#usuario', '#txtSenha', '#btnLogin'] #insira o CSS_select do usuario, senha e botao 'enter'
-                                                                             element_list = ['#usuario', #usuário
-                                                                                             '#btn-login',  #avança
-                                                                                             '#senha', #senha
-                                                                                             '#btn-login'] #entrar
+                                                                             element_list = ['#user', #usuário 
+                                                                                             '.login-button-container > button:nth-child(1) > div:nth-child(1)',  #avança  
+                                                                                             '#password', #senha
+                                                                                             'button.outline-secondary:nth-child(2)'] #entrar 
                                                                              ) # type: ignore #user
         self.driver = self.return_driver
         
