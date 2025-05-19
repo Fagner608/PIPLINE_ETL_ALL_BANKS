@@ -12,7 +12,7 @@ def main(date: datetime.date):
                  (f"Atualizando tabelas do banco de dados {date} - facta", cleaningTransforma_comission.load_comission),
                  (f"Limpando e transformando dados de produção {date} - facta", cleaningTransform_production.CleaningProduction),
                  (f"Atualizando tabelas do banco de dados {date} - facta", cleaningTransform_production.load_production),
-                 (f"Limpando e transformando dados de produção {date} - facta", cleaningTransform_contracts.CleaningContracts),
+                 (f"Limpando e transformando dados de contratos {date} - facta", cleaningTransform_contracts.CleaningContracts),
                  (f"Input dos contratos {date} - facta", cleaningTransform_contracts.load_contracts)
                  ]
 
@@ -25,5 +25,5 @@ def main(date: datetime.date):
 
 
 # Debug
-# main(date = datetime.date(2024, 8, 23))
+# main(date = datetime.date.today())
 # print("Transformação e carga facta finalizados.")

@@ -91,20 +91,40 @@ class download():
                 # Entrando na página de comissões
 
                 try:
-
                     WebDriverWait(driver,200 ).until(lambda x:  x.execute_script("return document.readyState") == 'complete')
-                    button  = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#corpoModalCrefisaAvisoAutenticacao > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)')))
-                    driver.execute_script("arguments[0].click();", button)
+                    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txt2FACode')))
+                    input("Insira o código 2f diretamente na página, depois pressione enter no teclado.")
+                    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.mt-3:nth-child(2) > div:nth-child(1) > button:nth-child(1)'))).click()
+                    
+                    WebDriverWait(driver,200 ).until(lambda x:  x.execute_script("return document.readyState") == 'complete')
+                    # time.sleep(2)
+                    # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txtAutenticacaoSenhaFinanceira'))).send_keys(self.credentials['USER_AUTHENTICATION'])
+                    # time.sleep(2)
+                    # WebDriverWait(driver, 200).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'button.btn:nth-child(2)'))).click()
+                    # time.sleep(2)
+                    # WebDriverWait(driver, 200).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.swal2-confirm'))).click()
+                    
+                    # driver.execute_script("arguments[0].click();", button)
                 except Exception as Exc:
-                    raise(Exc)
-
+                    print("Verifique a autenticação de 2f.")
+                    driver.refresh()
+                    WebDriverWait(driver,200 ).until(lambda x:  x.execute_script("return document.readyState") == 'complete')
+                    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#txt2FACode')))
+                    input("Insira o código 2f diretamente na página, depois pressione enter no teclado.")
+                    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.mt-3:nth-child(2) > div:nth-child(1) > button:nth-child(1)'))).click()
+                    WebDriverWait(driver,200 ).until(lambda x:  x.execute_script("return document.readyState") == 'complete')
+                    
 
                 try:
+
+
+
                     WebDriverWait(driver,200 ).until(lambda x:  x.execute_script("return document.readyState") == 'complete')
                     time.sleep(10)
                     WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu4'))).click()
                     
                     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu4 > li:nth-child(2) > a:nth-child(1)'))).click()
+                
                 except TimeoutException:
                     WebDriverWait(driver, 50).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#menu5'))).click()
                     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#listaMenu5 > li:nth-child(2) > a:nth-child(1)'))).click()
@@ -148,7 +168,7 @@ class download():
                 except NoAlertPresentException:
                     pass
 
-                driver.close()
+                # driver.close()
         
 
     def dowloadProductiion(self, date_work: datetime.date):

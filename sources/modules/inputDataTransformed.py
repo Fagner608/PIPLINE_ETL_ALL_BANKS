@@ -43,7 +43,21 @@ class inputsDB():
         con, cur = self.conDatabase()
         atributos_sql = ', '.join(atributos_zz)
         atributos_staging_sql = ', '.join(atributos_staging_area)
-        query_insert = f'''
+
+        ## observação sobre a mundança abaixo se deu ao fato de que a comparação estava acontecendo entre nome
+        ## devido a existência de homônimos, alguns clientes não estava sendo cadastrados
+        ## então inclui a condição para atributos_zz[1] ser verificada. Mas, acredito que nem todos tenham cpf  - em teste
+        query_insert =  f'''
+                        INSERT INTO {tabela_zz} ({atributos_sql})
+                        SELECT DISTINCT {atributos_staging_sql}
+                        FROM staging_area
+                        WHERE {atributos_staging_area[0]} IS NOT NULL  -- Filtra valores nulos
+                            AND NOT EXISTS (
+                                SELECT 1
+                                FROM {tabela_zz}
+                                WHERE {tabela_zz}.{atributos_zz[1]} = staging_area.{atributos_staging_area[1]}
+                            );
+                    ''' if tabela_zz == 'cliente' else f'''
                         INSERT INTO {tabela_zz} ({atributos_sql})
                         SELECT DISTINCT {atributos_staging_sql}
                         FROM staging_area
@@ -53,7 +67,7 @@ class inputsDB():
                                 FROM {tabela_zz}
                                 WHERE {tabela_zz}.{atributos_zz[0]} = staging_area.{atributos_staging_area[0]}
                             );
-                    '''
+                    ''' 
         
 
         query_insert_contracts = f'''
