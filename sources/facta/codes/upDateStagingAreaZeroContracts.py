@@ -30,12 +30,12 @@ class updateStaginAreaZero():
         # exemlo
         query = f'''
             
-                -- Atualizando usuario
+                -- Atualizando
                 DELETE from contrato
                 where 
-                    valor_cms_repasse == '0,00' or valor_cms_repasse == '0' or valor_cms_repasse == '0.00' 
+                    (valor_cms_repasse == '0,00' or valor_cms_repasse == '0' or valor_cms_repasse == '0.00') 
                 and 
-                    valor_bonus_repasse == '0,00' or valor_bonus_repasse == '0' or valor_bonus_repasse == '0.00'
+                    (valor_bonus_repasse == '0,00' or valor_bonus_repasse == '0' or valor_bonus_repasse == '0.00')
                 and 
                     nome_banco == 'FACTA FINANCEIRA'
 

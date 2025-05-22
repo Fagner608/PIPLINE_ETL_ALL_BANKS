@@ -1,4 +1,7 @@
 # imports
+import warnings
+warnings.filterwarnings('ignore')
+
 import sys
 # mudulos base
 sys.path.append("../../modules")
@@ -35,7 +38,6 @@ def CleaningContracts(date: datetime.date):
                     )
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
     if contracts is not None:
-
         # metodo para limpeza de valores monetarios
         result = cleaningData().cleaning(dataFrame = contracts,
                                         typeData = ['monetary'],
@@ -165,7 +167,9 @@ def load_contracts(date: datetime.date):
 
     upDateStagingAreaZeroContracts.updateStaginAreaZero().upDatating()
 
+
+
     
 #Debug
-# CleaningContracts(date=datetime.date(2024, 8, 23))
-# load_contracts(date=datetime.date(2024, 8, 23))
+# CleaningContracts(date=datetime.date.today())
+# load_contracts(date=datetime.date.today())
