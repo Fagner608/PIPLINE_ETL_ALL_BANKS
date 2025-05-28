@@ -99,7 +99,7 @@ class read_downaload():
                 thousands = None,
                 sheet_name = None,
                 type_transference: list = ['comission', 'production', 'importation', 'extra'],
-                engine: list = ['csv', 'excel', 'html'],
+                engine: list = ['csv', 'excel', 'html', 'parquet'],
                 parse_dates = None,
                 format_parse_dates = None,
                 encoding = None,
@@ -158,6 +158,9 @@ class read_downaload():
                                         header=header,
                                         parse_dates=parse_dates,
                                         converters=converters)[0]
+                    
+                elif engine == 'parquet':
+                    dados = pd.read_parquet(path_to_read + file)
 
 
 

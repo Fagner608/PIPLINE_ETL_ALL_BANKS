@@ -126,3 +126,33 @@ class saveStageArea():
 
     
          
+class saveStageArea_BMS():
+    '''
+        Classe para salvar o resultado na Stage Area.
+
+    '''
+
+    def __init__(self):
+         pass
+    
+
+    def _conDatabase(self):
+        con = sqlite3.connect("../../../ZZ/importacoes_bms.db")
+        cur = con.cursor()
+        query = "create table if not exists temp_table(tabela BLOB)"
+        cur.execute(query)
+        con.commit()
+        return con, cur
+
+    def inputTable(self, table: pd.DataFrame):
+        con, cur = self._conDatabase()
+        
+        table.to_sql('temp_table', 
+                            con = con,
+                            if_exists = 'replace',
+                            index = False)
+        cur.close()
+        con.close()
+
+    
+         

@@ -17,6 +17,14 @@ class inputsDB():
         cur = con.cursor()
         return con, cur
 
+
+    def conDatabaseBMS(self):
+        con = sqlite3.connect("../../../ZZ/importacoes_bms.db")
+        cur = con.cursor()
+        return con, cur
+
+
+
     # cria dicionário com atributos de cada tabela
 
     def totalAttributes(self, list_tables: list):

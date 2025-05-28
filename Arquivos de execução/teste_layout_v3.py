@@ -14,8 +14,11 @@ def run_batch_file(file_path):
     subprocess.Popen(['cmd', '/c', file_path], shell=True)
 
 # Conectar ao banco de dados SQLite
-conn = sqlite3.connect('../ZZ/importacoes.db')
-cursor = conn.cursor()
+# conn = sqlite3.connect('../ZZ/importacoes.db')
+# cursor = conn.cursor()
+
+
+
 
 # Função para filtrar os dados da tabela contrato com base nos atributos selecionados
 def filtrar_contratos(numero_ade, nome_banco, status_importacao, tipo_operacao, data_inicial, data_final):
@@ -47,7 +50,7 @@ def main():
 
     # Dicionário com os nomes dos botões e caminhos dos arquivos .lnk
     batch_files = {
-        "V8 - cartão": "executa_v8 - Atalho.lnk",
+        "V8 - BMS": "executa_v8_bms - Atalho.lnk",
         "FACTA": "executa_facta - Atalho.lnk",
         "CREFISA": "executar_crefisa - Atalho.lnk",
         "PAN": "executar_nova_pan - Atalho.lnk",
@@ -58,6 +61,18 @@ def main():
     # Sidebar com os filtros
     with st.sidebar:
         st.header("Menu de Scripts")
+
+        st.subheader("Escolha o Banco de Dados")
+        db_option = st.selectbox(
+            "Selecione o banco:",
+            options=["importacoes.db", "importacoes_bms.db"]
+        )
+
+        ## conectando ao DB
+        db_path = f"../ZZ/{db_option}"
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+
 
         # Estilo dos botões
         button_style = """

@@ -2,7 +2,8 @@ import sqlite3
 from tqdm import tqdm
 # instanciando conexao
 print("Conectando ao banco de dados.")
-con = sqlite3.connect("../../ZZ/importacoes.db")
+con = sqlite3.connect("../../../ZZ/importacoes.db")
+
 cur = con.cursor()
 
 # Instanciando tabelas
