@@ -127,7 +127,7 @@ class comissionToStorm():
                 ## inserir nome certo do usuario
                 engine = psycopg2.connect(
                     host = self.credentials['HOSTBFF'],
-                    dbname = self.credentials['USERBFF'],
+                    dbname = self.credentials['DBNAMEBFF'],
                     user = self.credentials['USERBFF'],
                     password = self.credentials['PASSWORDBFF'],
                     port = self.credentials['PORTBFF'],
