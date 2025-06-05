@@ -19,5 +19,5 @@ def main(date: datetime.date):
 
 
 # Debug
-# main(date = datetime.date(2024,6,18))
+# main(date = datetime.date.today())
 # print("Transformação e carga v8 - BMS finalizados.")

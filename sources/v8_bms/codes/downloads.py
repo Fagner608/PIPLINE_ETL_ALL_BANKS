@@ -59,8 +59,8 @@ class download():
             payload->'simulation'->'table'->'data'->>'id' as id_tabela
         FROM public.operations
         WHERE payload->>'legacy_status' = 'paid'
-        AND TO_TIMESTAMP((payload->>'paid_at')::bigint) > '{date_to.strftime("%Y-%m-%d")}'
-        AND TO_TIMESTAMP((payload->>'paid_at')::bigint) < '{date_from.strftime("%Y-%m-%d")}'
+        AND TO_TIMESTAMP((payload->>'paid_at')::bigint) >= '{date_to.strftime("%Y-%m-%d")}'
+        AND TO_TIMESTAMP((payload->>'paid_at')::bigint) <= '{date_from.strftime("%Y-%m-%d")}'
         '''
         return query
     

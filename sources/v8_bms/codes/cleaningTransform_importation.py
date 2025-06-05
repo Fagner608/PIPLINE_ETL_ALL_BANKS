@@ -56,7 +56,7 @@ def statusManager(bank:str, date: datetime.datetime):
         cur.execute("""
             update contratos_bms -- retorna ade
             set status_importacao = 'importado' -- da tabela contratos_bms
-            WHERE (status_importacao != 'importada' OR status_importacao IS NULL) -- se o status nao for importado
+            WHERE (status_importacao != 'importada' OR status_importacao IS NULL OR status_importacao != 'importado') -- se o status nao for importado
             AND "NUMERO PROPOSTA" IN (SELECT ade FROM temp_table) --e a ade esteja no staging area
         """)
     except sqlite3.OperationalError:
