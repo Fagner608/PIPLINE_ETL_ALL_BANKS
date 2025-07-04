@@ -2,17 +2,27 @@
 import sys
 # mudulos base
 sys.path.append("../../modules")
-from readDownload import read_downaload
-from cleaningTransformaData import cleaningData, transformationData, saveStageArea_BMS
+from tempTableManager import CleaningTempTable
+from readDownload_v8 import read_downaload
+from cleaningTransformaData_v8 import cleaningData, transformationData, saveStageArea
+
 from inputDataTransformed import inputsDB
+
+from connectionDB import ConectionDB
+from enumClasses import Connector, Database
+from logger import loogerControls
+logger = loogerControls().loggerFunction()
+
 import datetime
 from upDateStagingAreaContracts import updateStaginAreaContracts
 
+from updateClientTable import updateProdTables
 
 EXECUTE_NEXT_STEP = False
 
+
 # Funcao para executar limpeza, tratamento e transformacao
-def CleaningContracts(date: datetime.date):
+def CleaningContracts(date: datetime.date, provider: str):
 
     '''
         Funcao para executar limpeza, tratamento e transformacao nos contratos (podem ser do relatorio de producao ou de comissao)
@@ -27,8 +37,8 @@ def CleaningContracts(date: datetime.date):
     contracts = read_downaload().read_data(
                         bank='v8_bms', # informe o nome do banco conforme esta no diretorio criado
                         date = date,
-                        type_transference = ['production'],
-                        engine = ['parquet'], # informe o engine para leitura
+                        type_transference = ['production']
+                        # engine = ['parquet'], # informe o engine para leitura
 
                     )
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
@@ -48,18 +58,16 @@ def CleaningContracts(date: datetime.date):
 
         final_contracts = contracts
         final_contracts.columns = ["NUMERO PROPOSTA", "STATUS", "NOME", "USUARIO BANCO", "TELEFONE", "CPF", "VALOR OPERACAO", "VALOR LIBERADO", "NUMERO PARCELAS", "DATA DE PAGAMENTO", "DATA DE CRIACAO", "IOF TOTAL", "TAXA TAC", "TAX_INFORMADO", "ID VENDEDOR", "ID TABELA"]
+        # final_contracts = final_contracts.to_pandas()
+        saveStageArea().inputTable(table = final_contracts)
         
-        saveStageArea_BMS().inputTable(table = final_contracts)
-        # metodo par enviar os dados para uma tabela temporária no DB
-        ## trocar por um DB postgres
-  
 
 ### na staginarea faz a conferência de contratos duplicados e sobe com as varia´veis pra verificação do status.
 # então, não vou usar o resto do código
 
 
 # criar uma tabela para armezar os contratos com o schame acima
-def load_contracts(date: datetime.date):
+def load_contracts(date: datetime.date, provider: str, db_name: str = Database.BM_BMS.value):
 
     
     '''
@@ -72,51 +80,26 @@ def load_contracts(date: datetime.date):
     '''
 
     if EXECUTE_NEXT_STEP:
+    # if True:
 
         # Aqui a tabela será atualizada para incluir o que falta
-        updateStaginAreaContracts().upDatating(bank='V8 DIGITAL')
+        updateStaginAreaContracts().upDatating(bank='V8 DIGITAL', db_name = db_name, provider = provider)
 
-        # ## inserir código para transferir da temp_table para a tabela de produção
+        ## Buscando propostas incompletas
+        CleaningTempTable().getProposals()
 
-        ###### inserir aqui o status importação####################################
 
+        # envia dados para tabela de produção
+        updateProdTables()
 
-        query_insert_contracts = f'''
-                            
-                            INSERT INTO contratos_bms ("NUMERO PROPOSTA", "STATUS", "NOME", "USUARIO BANCO", "TELEFONE", "CPF",
-                                                        "VALOR OPERACAO", "VALOR LIBERADO", "NUMERO PARCELAS", "DATA DE PAGAMENTO",
-                                                        "DATA DE CRIACAO", "IOF TOTAL", "TAXA TAC", "TAX_INFORMADO",
-                                                        "ID VENDEDOR", "ID TABELA", "BANCO", "PROVEDOR", "ORGAO",
-                                                        "TIPO_DE_OPERACAO", "SITUACAO", "FORMALIZACAO_DIGITAL", "status_importacao")
-                            SELECT DISTINCT "NUMERO PROPOSTA", "STATUS", "NOME", "USUARIO BANCO", "TELEFONE", "CPF",
-                                            "VALOR OPERACAO", "VALOR LIBERADO", "NUMERO PARCELAS", "DATA DE PAGAMENTO",
-                                            "DATA DE CRIACAO", "IOF TOTAL", "TAXA TAC", "TAX_INFORMADO",
-                                            "ID VENDEDOR", "ID TABELA", "BANCO", "PROVEDOR", "ORGAO",
-                                            "TIPO_DE_OPERACAO", "SITUACAO", "FORMALIZACAO_DIGITAL", "status_importacao"
-                            FROM temp_table
-                            WHERE temp_table."NUMERO PROPOSTA" IS NOT NULL  -- Filtra valores nulos
-                                AND NOT EXISTS (
-                                    SELECT 1
-                                    FROM contratos_bms
-                                    WHERE contratos_bms."NUMERO PROPOSTA" = temp_table."NUMERO PROPOSTA"
-                                );
-                        '''
+        ## Atualizando propostas incompletas
+        CleaningTempTable().update()
 
-        try:
-            con, cur = inputsDB().conDatabaseBMS()
-            cur.execute(query_insert_contracts)
-            con.commit()
-            cur.close()
-            con.close()
+        ## propostas não processadas
+        CleaningTempTable().count()
 
-        except Exception as exc:
-            print(f"Erro ao registrar contratos no DB: {exc}")
-            con.commit()
-            cur.close()
-            con.close()
-            raise
 
 
 #Debug
-# CleaningContracts(date=datetime.date.today())
-# load_contracts(date=datetime.date.today())
+# CleaningContracts(date=datetime.date.today(), provider = 'BMS')
+# load_contracts(date=datetime.date.today(), provider = 'BMS')
