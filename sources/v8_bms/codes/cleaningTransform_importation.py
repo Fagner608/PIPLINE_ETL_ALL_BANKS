@@ -14,6 +14,30 @@ import sqlite3
 import re
 import polars as pl
 
+
+def classificar_data(x):
+    
+
+    match = re.search(r'\d{1,2}-\d{1,2}-\d{4}', x)
+    if match:
+        return match.group(0)
+
+    match = re.search(r'\d{1,2}-\d{1,2}-\d{2}', x)
+    if match:
+        return match.group(0)
+
+    match = re.search(r'\d{4}-\d{1,2}-\d{1,2}', x)
+    if match:
+        return match.group(0)
+
+    match = re.search(r'\d{1,2}-\d{1,2}', x)
+    if match:
+        return match.group(0)
+
+    return None
+
+
+
 def cleaningImportation(provider: str, date = datetime.datetime):
 
     # Trabalhando na tabela de produção
@@ -30,13 +54,21 @@ def cleaningImportation(provider: str, date = datetime.datetime):
         try:
             
             result = result.with_columns(pl.col("Nome Arquivo").map_elements(
-                lambda x: (re.findall('\\d{1,2}-\\d{1,2}-\\d{4}', x) or re.findall('\\d{4}-\\d{1,2}-\\d{1,2}', x) or re.findall('\\d{1,2}-\\d{1,2}', x))[0],
+                classificar_data,
                 return_dtype = pl.Utf8
             ).alias('data_importacao')
             )
             result = result.with_columns(pl.col("data_importacao").map_elements(
-                lambda x: x + f"-{date.year}" if len(x) < 8 else x 
+                lambda x: x + f"-{date.year}" if len(x) == 4 else x 
             ))
+            result = result.with_columns(pl.col("data_importacao").map_elements(
+                lambda x: x[:4] + f"-{date.year}" if len(x) == 6 else x 
+            ))
+            result = result.with_columns(pl.col("data_importacao").map_elements(
+                lambda x: x[:5] + f"-{date.year}" if len(x) == 8 else x 
+            ))
+            
+            
             result = result.drop(['Nome Arquivo'])
             result = result.with_columns(pl.coalesce([
                 pl.col('data_importacao').str.to_date(format='%Y-%m-%d', strict = False),

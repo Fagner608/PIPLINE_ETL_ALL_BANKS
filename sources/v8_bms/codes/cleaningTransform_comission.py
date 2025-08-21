@@ -44,7 +44,7 @@ def CleaningComission(date: datetime.date):
     # preencher com os labels transformados
     result = cleaningData().cleaning(dataFrame = comission,
                                     typeData = ['monetary'],
-                                    columns_convert = ['valor_base'])
+                                    columns_convert = ['valor_base']) # precisa ajustar
     
 
     # Retorna instancias dos atributros listados transformados
@@ -55,7 +55,7 @@ def CleaningComission(date: datetime.date):
                                             )
 
     final_comission = transformationData().convert_monetary(dataFrame = result,
-                                    columns_convert = ['valor_base'])
+                                    columns_convert = ['valor_base']) # precisa ajustar
 
 
     ## faca aqui as demais transformacoes

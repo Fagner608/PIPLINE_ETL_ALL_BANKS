@@ -18,6 +18,8 @@ from logger import loogerControls
 import polars as pl
 
 
+
+
 class comissionToStorm():
       
 
@@ -50,6 +52,17 @@ class comissionToStorm():
             
             
             
+        ## função para limpar valor
+        def cleaning_val(self, val):
+            if val is None:
+                return None
+            if isinstance(val, float):
+                return val
+            val = str(val).strip()
+            val = val.replace(",", "")
+            val = str(val).strip()
+            # val = val.replace(".", ",")
+            return float(val)
 
         def comissionReport(self, date: datetime.date, provider: str):
 
@@ -78,6 +91,19 @@ class comissionToStorm():
                     dados = dados.with_columns(pl.col('data_pagamento').dt.date())
                     dados = dados.rename(dict(zip(dados.columns, self.columns_to_rename)))
                     dados = dados.with_columns(pl.col("#VALOR_BASE#").alias("#VALOR_BASE_BRUTO#"))
+                    
+                    list_col = ["#VALOR_CMS#", "#VALOR_BASE#", "#VALOR_BASE_BRUTO#", '#TAX_INFORMADO#', '#SPREAD_ESTIMADO#']
+                    dados = dados.with_columns([
+                            pl.col(col).map_elements(self.cleaning_val).cast(float).alias(col)
+                            for col in list_col
+                        ])
+                        
+                    dados = dados.with_columns([
+                            pl.col("#VALOR_CMS#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_CMS#"),
+                            pl.col("#VALOR_BASE#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_BASE#"),
+                            pl.col("#VALOR_BASE_BRUTO#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_BASE_BRUTO#")
+                    ])
+
                     dados_cms_correta = dados.filter(pl.col('#TOMADA_DECISAO#') == False)
                     dados_tomada_decisao = dados.filter(pl.col('#TOMADA_DECISAO#') == True)
                 except Exception as exc:
@@ -87,11 +113,7 @@ class comissionToStorm():
                 if not dados_cms_correta.is_empty():
                     try:
                         dados_cms_correta = dados_cms_correta.drop(['#TAX_INFORMADO#', '#SPREAD_ESTIMADO#', '#TOMADA_DECISAO#'])    
-                        dados_cms_correta = dados_cms_correta.with_columns([
-                            pl.col("#VALOR_CMS#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_CMS#"),
-                            pl.col("#VALOR_BASE#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_BASE#"),
-                            pl.col("#VALOR_BASE_BRUTO#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_BASE_BRUTO#")
-                        ])
+                        
                         dados_cms_correta.write_csv(path_to_save + f'{provider}_{date.strftime("%Y-%m-%d_%H_%M")}.csv', separator = ';')
                         self.logger.info("Relatorio de comissao salvo.")
                     except Exception as exc:
@@ -102,9 +124,6 @@ class comissionToStorm():
                     try:
                         dados_tomada_decisao = dados_tomada_decisao.drop(["#TOMADA_DECISAO#"])
                         dados_tomada_decisao = dados_tomada_decisao.with_columns([
-                            pl.col("#VALOR_CMS#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_CMS#"),
-                            pl.col("#VALOR_BASE#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_BASE#"),
-                            pl.col("#VALOR_BASE_BRUTO#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#VALOR_BASE_BRUTO#"),
                             pl.col("#TAX_INFORMADO#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#TAX_INFORMADO#"),
                             pl.col("#SPREAD_ESTIMADO#").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("#SPREAD_ESTIMADO#")
                         ])

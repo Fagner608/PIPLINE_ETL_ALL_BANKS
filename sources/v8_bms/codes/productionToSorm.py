@@ -23,6 +23,8 @@ from dotenv import dotenv_values
 ####### AJUSTAR AS COLUNAS PARA A TABELA DE COMISSÃO CREFISA
 
 
+
+
 class productionToStorm():
       
         def __init__(self):
@@ -57,6 +59,18 @@ class productionToStorm():
 
 
 
+        ## função para limpar valor
+        def cleaning_val(self, val):
+            if val is None:
+                return None
+            if isinstance(val, float):
+                return val
+            val = str(val).strip()
+            val = val.replace(",", "")
+            val = str(val).strip()
+            return float(val)
+
+
         def productionReport(self, date: datetime.date, provider: str):
             dados = relatoriosNaoImportados().naoImportados(provider=provider)
             if dados is not None:
@@ -75,7 +89,13 @@ class productionToStorm():
                 
                 dados = dados.with_columns(pl.col("data_pagamento").dt.date())
                 dados = dados.rename(dict(zip(dados.columns, self.columns_to_rename)))
-                dados = dados.with_columns(pl.col("DATA CADASTRO").alias("DATA PAGAMENTO"))
+                dados = dados.with_columns(pl.col("DATA CADASTRO").alias("DATA DE PAGAMENTO"))
+
+                list_col = ["VALOR OPERACAO", "VALOR LIBERADO"]
+                dados = dados.with_columns([
+                            pl.col(col).map_elements(self.cleaning_val).cast(float).alias(col)
+                            for col in list_col
+                        ])
 
                 dados = dados.with_columns([
                             pl.col("VALOR OPERACAO").cast(float).map_elements(lambda x: locale.currency(float(x), symbol=False, grouping=True)).alias("VALOR OPERACAO"),

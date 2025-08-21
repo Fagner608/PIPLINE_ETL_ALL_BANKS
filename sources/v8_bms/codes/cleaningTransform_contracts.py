@@ -5,7 +5,7 @@ sys.path.append("../../modules")
 from tempTableManager import CleaningTempTable
 from readDownload_v8 import read_downaload
 from cleaningTransformaData_v8 import cleaningData, transformationData, saveStageArea
-
+import polars as pl
 from inputDataTransformed import inputsDB
 
 from connectionDB import ConectionDB
@@ -44,29 +44,17 @@ def CleaningContracts(date: datetime.date, provider: str):
     ## Codigo segue o fluxo se o arquivo for lido com sucesso
     if contracts is not None:
         EXECUTE_NEXT_STEP = True
-        # metodo para limpeza de valores monetarios
-        # result = cleaningData().cleaning(dataFrame = contracts,
-        #                                         typeData = ['monetary'],
-        #                                         columns_convert = ['iof_total', 'tac_total'] # informe variaveis com valores monetarios, conforme exemplo
-        #                                         )
-
-
-        # # metodo para transforacao dos valores monetarios
-        # final_contracts = transformationData().convert_monetary(dataFrame = result,
-        #                                 columns_convert = ['iof_total', 'tac_total'])
-
 
         final_contracts = contracts
         final_contracts.columns = ["NUMERO PROPOSTA", "STATUS", "NOME", "USUARIO BANCO", "TELEFONE", "CPF", "VALOR OPERACAO", "VALOR LIBERADO", "NUMERO PARCELAS", "DATA DE PAGAMENTO", "DATA DE CRIACAO", "IOF TOTAL", "TAXA TAC", "TAX_INFORMADO", "ID VENDEDOR", "ID TABELA"]
         # final_contracts = final_contracts.to_pandas()
+        cols_casting = ["VALOR OPERACAO", "VALOR LIBERADO", "IOF TOTAL", "TAXA TAC", "TAX_INFORMADO"]
+        final_contracts = final_contracts.with_columns([pl.col(col).cast(pl.Float64) for col in cols_casting])
         saveStageArea().inputTable(table = final_contracts)
         
 
-### na staginarea faz a conferência de contratos duplicados e sobe com as varia´veis pra verificação do status.
-# então, não vou usar o resto do código
 
 
-# criar uma tabela para armezar os contratos com o schame acima
 def load_contracts(date: datetime.date, provider: str, db_name: str = Database.BM_BMS.value):
 
     
@@ -75,7 +63,7 @@ def load_contracts(date: datetime.date, provider: str, db_name: str = Database.B
 
         ## FACA A SEGUINTE CONFIGURACAO:
 
-        - atribua ao lado direito da chave,o label da variavel que sera setada no banco de dados, conforme exemplo abaixo. USe os labels tratados.
+        - atribua ao lado direito da chave, o label da variavel que será setada no banco de dados, conforme exemplo abaixo. USe os labels tratados.
 
     '''
 
